@@ -1,0 +1,194 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use App\ModelUser;
+use Illuminate\Http\Request;
+use Illuminate\Pagination\Paginator;
+
+class AdminCustomersController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        return view('admin.customers.index');
+    }
+
+
+    /**
+     * Load customers data
+     * @param Request $request
+     * 
+     * @return Response Json
+     * 
+     */
+    public function search(Request $request)
+    {
+       
+        if($request->ajax())
+        {
+            $currentPage = ($request->start == 0) ? 1 : (($request->start / $request->length) + 1);
+
+            Paginator::currentPageResolver(function() use($currentPage){
+                return $currentPage;
+            });
+
+            $S3avatar = config('constant.S3_AVATAR');
+
+            $start = ($request->start == 0) ? 1 : (($request->start) * ($request->length) + 1);
+
+            $orderDir = $request->order[0]['dir'];
+            $orderColumnId = $request->order[0]['column'];
+            $orderColumn = str_replace('"','', $request->columns[$orderColumnId]['name']);
+
+            $query = User::where('role_id',1)->selectRaw('users.id,phone_number,name,
+            users.email,users.is_active,CONCAT("'.$S3avatar.'",IFNULL(profile_image,"default-user.png")) AS profile_image');
+            
+            $query->where(function($query) use($request){
+                $query->orWhere('users.name', 'like', '%'.$request->search['value'].'%')
+                ->orWhere('users.phone_number', 'like', '%'.$request->search['value'].'%')
+                ->orWhere('users.email', 'like', '%'.$request->search['value'].'%');
+            });
+            
+          
+            $customers = $query->orderBy($orderColumn, $orderDir)
+            ->paginate($request->length)->toArray();
+            
+            $customers['recordsFiltered'] = $customers['recordsTotal'] = $customers['total'];
+
+            foreach($customers['data'] as $key => $customer)
+            {
+                
+                $params = [
+                    'customer' => $customer['id']
+                ];
+
+                $deleteRoute = route('customers.destroy', $params);
+                $viewRoute = route('customers.show', $params);
+                $statusRoute = route('customers.status', $params);
+                
+                $status = ($customer['is_active'] == 1) ? '<span class="label label-success">Active</span>' : '<span class="label label-danger">Inactive</span>';
+                
+                $customers['data'][$key]['profile_image'] = '<img src="'.$customer['profile_image'].'" class="rounded-circle" width="40" height="40">';
+                $customers['data'][$key]['status'] = '<a href="javascript:void(0);" data-url="' . $statusRoute . '" class="btnChangeStatus">'. $status.'</a>';
+                $customers['data'][$key]['action'] ='<a href="' . $viewRoute . '" class="btn btn-raised waves-effect waves-float waves-light-blue m-l-5" title="View customer"><i class="zmdi zmdi-eye"></i></a>&nbsp&nbsp';
+                $customers['data'][$key]['action'] .= '<a href="javascript:void(0);" data-url="'.$deleteRoute.'" class="btn btn-raised waves-effect waves-float waves-light-blue m-l-5 btnDelete" data-title="customer" data-type="confirm" title="delete customer"><i class="zmdi zmdi-delete"></i> </a>&nbsp&nbsp';
+            }   
+        }
+        
+        return json_encode($customers);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        //
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+
+        $S3avatar = config('constant.S3_AVATAR');
+
+        $customerDetail = User::where('role_id',1)->where('id', $id)
+        ->selectRaw('users.id,phone_number,name,DATE_FORMAT(users.created_at,"'.config('constant.DATE_FORMAT_STR').'") as join_date,
+        users.email,users.is_active,CONCAT("'.$S3avatar.'",IFNULL(profile_image,"default-user.png")) AS profile_image')
+        ->first();
+        
+        return view('admin.customers.view', compact('customerDetail'));
+
+    }
+
+
+    /**
+     * Change user status
+     * @param Request $team
+     * 
+     * @return Response view
+     */
+    public function changeStatus(User $customer)
+    {
+        if (empty($customer))
+        {
+            return redirect(route('customers.index'))->with('error', trans('messages.customers.not_found_admin'));
+        }
+
+        $customer->is_active = !$customer->is_active;
+        
+        if ($customer->save()) 
+        {
+            $status = $customer->is_active ? 'Active' : 'Inactive';
+
+            return redirect(route('customers.index'))->with('success', trans('messages.customers.status.success', ['status' => $status]));
+        }
+
+        return redirect(route('customers.index'))->with('error', trans('messages.customers.status.error'));
+    }
+
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        $customer = User::find($id);
+        
+        if($customer->delete())
+        {
+            return redirect(route('customers.index'))->with('success', trans('messages.customers.delete.success'));
+        }
+        return redirect(route('customers.index'))->with('error', trans('messages.customers.delete.error'));
+    }
+}
