@@ -26,7 +26,7 @@
                                     <div class="header l-app">
                                     </div>
                                     <div class="member-img m-t-5">
-                                        <img src="{{$customerDetail->profile_image}}" class="rounded-circle" alt="profile-image" width="100" height="150px">
+                                        <img src="{{url($customerDetail->profile_image)}}" class="rounded-circle" alt="profile-image" width="100" height="150px">
                                     </div>
                                     <div class="body">
                                         <div class="col-12">

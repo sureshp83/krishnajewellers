@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\ModelUser;
+use App\Model\User;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\Paginator;
 
@@ -46,11 +46,13 @@ class AdminCustomersController extends Controller
             $orderColumnId = $request->order[0]['column'];
             $orderColumn = str_replace('"','', $request->columns[$orderColumnId]['name']);
 
-            $query = User::where('role_id',1)->selectRaw('users.id,phone_number,name,
-            users.email,users.is_active,CONCAT("'.$S3avatar.'",IFNULL(profile_image,"default-user.png")) AS profile_image');
+            $query = User::selectRaw('users.id,phone_number,CONCAT(first_name," ",last_name) as name,
+            users.email,CONCAT("'.$S3avatar.'",IFNULL(profile_image,"default-user.png")) AS profile_image');
             
             $query->where(function($query) use($request){
-                $query->orWhere('users.name', 'like', '%'.$request->search['value'].'%')
+                $query->where('users.first_name', 'like', '%'.$request->search['value'].'%')
+                ->orWhere('users.last_name', 'like', '%'.$request->search['value'].'%')
+                ->orWhere(\DB::raw('CONCAT(users.first_name," ",users.last_name)'), 'like', '%'.$request->search['value'].'%')
                 ->orWhere('users.phone_number', 'like', '%'.$request->search['value'].'%')
                 ->orWhere('users.email', 'like', '%'.$request->search['value'].'%');
             });
@@ -70,13 +72,12 @@ class AdminCustomersController extends Controller
 
                 $deleteRoute = route('customers.destroy', $params);
                 $viewRoute = route('customers.show', $params);
-                $statusRoute = route('customers.status', $params);
+                $editRoute = route('customers.edit', $params);
+
+                $customers['data'][$key]['profile_image'] = '<img src="'.url(config('constant.CUSTOMER_AVATAR').$customer['profile_image']).'" class="rounded-circle" width="40" height="40">';
                 
-                $status = ($customer['is_active'] == 1) ? '<span class="label label-success">Active</span>' : '<span class="label label-danger">Inactive</span>';
-                
-                $customers['data'][$key]['profile_image'] = '<img src="'.$customer['profile_image'].'" class="rounded-circle" width="40" height="40">';
-                $customers['data'][$key]['status'] = '<a href="javascript:void(0);" data-url="' . $statusRoute . '" class="btnChangeStatus">'. $status.'</a>';
                 $customers['data'][$key]['action'] ='<a href="' . $viewRoute . '" class="btn btn-raised waves-effect waves-float waves-light-blue m-l-5" title="View customer"><i class="zmdi zmdi-eye"></i></a>&nbsp&nbsp';
+                $customers['data'][$key]['action'] .='<a href="' . $editRoute . '" class="btn btn-raised waves-effect waves-float waves-light-blue m-l-5" title="Edit customer"><i class="zmdi zmdi-edit"></i></a>&nbsp&nbsp';
                 $customers['data'][$key]['action'] .= '<a href="javascript:void(0);" data-url="'.$deleteRoute.'" class="btn btn-raised waves-effect waves-float waves-light-blue m-l-5 btnDelete" data-title="customer" data-type="confirm" title="delete customer"><i class="zmdi zmdi-delete"></i> </a>&nbsp&nbsp';
             }   
         }
@@ -91,7 +92,7 @@ class AdminCustomersController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.customers.create');
     }
 
     /**
@@ -102,7 +103,40 @@ class AdminCustomersController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        
+        $this->validate($request, [
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'email' => 'nullable',
+            'address' => 'required',
+            'description' => 'nullable',
+            'phone_number' => 'required',
+            'alternate_phone_number' => 'nullable'
+        ]);
+
+        $customer = new User();
+        $customer->fill($request->all());
+
+        if($request->has('profile_image'))
+        {
+            $basePath = config('constant.CUSTOMER_AVATAR');
+            $image = $request->file('profile_image');
+            $fileName = time().'_'.strtolower(\Str::random(6)).'.'.$image->getClientOriginalExtension();
+            $destinationPath = public_path($basePath);
+            
+            if($image->move($destinationPath, $fileName))
+            {
+                chmod($destinationPath.'/'.$fileName,0777);
+                $customer->profile_image = $fileName;
+            }
+        }
+        
+        if($customer->save())
+        {
+            return redirect(route('customers.index'))->with('success', trans('messages.customers.add.success'));
+        }
+
+        return redirect(route('customers.index'))->with('error', trans('messages.customers.add.error'));
     }
 
     /**
@@ -114,11 +148,11 @@ class AdminCustomersController extends Controller
     public function show($id)
     {
 
-        $S3avatar = config('constant.S3_AVATAR');
+        $S3avatar = config('constant.CUSTOMER_AVATAR');
 
-        $customerDetail = User::where('role_id',1)->where('id', $id)
-        ->selectRaw('users.id,phone_number,name,DATE_FORMAT(users.created_at,"'.config('constant.DATE_FORMAT_STR').'") as join_date,
-        users.email,users.is_active,CONCAT("'.$S3avatar.'",IFNULL(profile_image,"default-user.png")) AS profile_image')
+        $customerDetail = User::where('id', $id)
+        ->selectRaw('users.id,phone_number,CONCAT(first_name," ",last_name) as name,DATE_FORMAT(users.created_at,"'.config('constant.DATE_FORMAT_STR').'") as join_date,
+        users.email,CONCAT("'.$S3avatar.'",IFNULL(profile_image,"default-user.png")) AS profile_image')
         ->first();
         
         return view('admin.customers.view', compact('customerDetail'));
@@ -160,7 +194,14 @@ class AdminCustomersController extends Controller
      */
     public function edit($id)
     {
-        //
+        $S3avatar = url(config('constant.CUSTOMER_AVATAR'));
+
+        $customerDetail = User::where('id', $id)
+        ->selectRaw('users.*,CONCAT("'.$S3avatar.'","/",IFNULL(profile_image,"default-user.png")) AS profile_image')
+        ->first();
+       
+        return view('admin.customers.create', compact('customerDetail'));
+
     }
 
     /**
@@ -173,6 +214,40 @@ class AdminCustomersController extends Controller
     public function update(Request $request, $id)
     {
         //
+       // dd($request->all());
+        $this->validate($request, [
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'email' => 'nullable',
+            'address' => 'required',
+            'description' => 'nullable',
+            'phone_number' => 'required',
+            'alternate_phone_number' => 'nullable'
+        ]);
+
+        $customer = User::find($request->customerId);
+        $customer->fill($request->all());
+
+        if($request->has('profile_image'))
+        {
+            $basePath = config('constant.CUSTOMER_AVATAR');
+            $image = $request->file('profile_image');
+            $fileName = time().'_'.strtolower(\Str::random(6)).'.'.$image->getClientOriginalExtension();
+            $destinationPath = public_path($basePath);
+            
+            if($image->move($destinationPath, $fileName))
+            {
+                chmod($destinationPath.'/'.$fileName,0777);
+                $customer->profile_image = $fileName;
+            }
+        }
+        
+        if($customer->save())
+        {
+            return redirect(route('customers.index'))->with('success', trans('messages.customers.add.success'));
+        }
+
+        return redirect(route('customers.index'))->with('error', trans('messages.customers.add.error'));
     }
 
     /**

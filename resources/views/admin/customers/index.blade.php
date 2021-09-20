@@ -35,7 +35,6 @@
                                         <th>Name</th>
                                         <th>Email</th>
                                         <th>Phone No</th>
-                                        <th>Status</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -49,7 +48,6 @@
                                         <th>Name</th>
                                         <th>Email</th>
                                         <th>Phone No</th>
-                                        <th>Status</th>
                                         <th>Action</th>
                                     </tr>
                                     </tfoot>
@@ -84,7 +82,13 @@
         table = $('#users').DataTable({
             dom: 'Bfrtip',
             buttons: [
-                'copy', 'csv', 'excel', 'pdf', 'print'
+                'csv', 'print',
+                {
+                text: 'Add',
+                action: function ( e, dt, node, config ) {
+                    window.location.href = "{{route('customers.create')}}"
+                }
+            }
             ],
             processing: true,
             serverSide: true,
@@ -100,7 +104,6 @@
                 {data : 'name', name : 'name'},
                 {data : 'email', name : 'email'},
                 {data : 'phone_number', name : 'phone_number'},
-                {data : 'status', name : 'is_active'},
                 {data : 'action', name : 'action', orderable: false}
             ],
 

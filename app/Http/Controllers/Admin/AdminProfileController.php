@@ -88,7 +88,7 @@ class AdminProfileController extends Controller
         if(!empty($request->profile_image))
         {
             
-            $basePath = config('constant.ADMIN_AVATAR');'admin-assets/images/profile_image/';
+            $basePath = config('constant.ADMIN_AVATAR');
             $image = $request->file('profile_image');
             $fileName = time().'_'.strtolower(\Str::random(6)).'.'.$image->getClientOriginalExtension();
             $destinationPath = public_path($basePath);
