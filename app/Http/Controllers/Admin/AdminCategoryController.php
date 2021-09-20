@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\ModelCategory;
+use App\Model\Category;
 use Illuminate\Pagination\Paginator;
 
 class AdminCategoryController extends Controller
@@ -46,13 +46,10 @@ class AdminCategoryController extends Controller
             $orderColumnId = $request->order[0]['column'];
             $orderColumn = str_replace('"','', $request->columns[$orderColumnId]['name']);
 
-            $query = Category::selectRaw('categories.id,categories.category,
-            categories.parent_id,parent.category as parent_category,categories.is_active')
-            ->leftJoin('categories as parent', 'parent.id', 'categories.parent_id');
+            $query = Category::selectRaw('categories.id,categories.name');
             
             $query->where(function($query) use($request){
-                $query->orWhere('categories.category', 'like', '%'.$request->search['value'].'%')
-                ->orWhere('parent.category', 'like', '%'.$request->search['value'].'%');
+                $query->orWhere('categories.name', 'like', '%'.$request->search['value'].'%');
             });
             
           
@@ -70,11 +67,7 @@ class AdminCategoryController extends Controller
 
                 $deleteRoute = route('categories.destroy', $params);
                 $editRoute = route('categories.edit', $params);
-                $statusRoute = route('categories.status', $params);
                 
-                $status = ($category['is_active'] == 1) ? '<span class="label label-success">Active</span>' : '<span class="label label-danger">Inactive</span>';
-                
-                $categories['data'][$key]['status'] = '<a href="javascript:void(0);" data-url="' . $statusRoute . '" class="btnChangeStatus">'. $status.'</a>';
                 $categories['data'][$key]['action'] ='<a href="' . $editRoute . '" class="btn btn-raised waves-effect waves-float waves-light-blue m-l-5" title="Edit category"><i class="zmdi zmdi-edit"></i></a>&nbsp&nbsp';
                 $categories['data'][$key]['action'] .= '<a href="javascript:void(0);" data-url="'.$deleteRoute.'" class="btn btn-raised waves-effect waves-float waves-light-blue m-l-5 btnDelete" data-title="category" data-type="confirm" title="delete category"><i class="zmdi zmdi-delete"></i> </a>&nbsp&nbsp';
             }   
@@ -92,12 +85,7 @@ class AdminCategoryController extends Controller
      */
     public function create()
     {
-        $parentCategories = Category::where(['is_active' => 1])
-        ->whereNull('parent_id')
-        ->selectRaw('categories.id,categories.category')
-        ->get();
-
-        return view('admin.category.create', compact('parentCategories'));
+        return view('admin.category.create');
     }
 
     /**
@@ -109,11 +97,11 @@ class AdminCategoryController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'category' => 'required'
+            'name' => 'required'
         ]);
 
         $category = new Category();
-        $category->fill($request->all());
+        $category->name = $request->name;
         
         if($category->save())
         {
@@ -121,32 +109,6 @@ class AdminCategoryController extends Controller
         }
 
         return redirect(route('categories.index'))->with('error', trans('messages.categories.add.error'));
-    }
-
-
-    /**
-     * Change category status
-     * @param Request $team
-     * 
-     * @return Response view
-     */
-    public function changeStatus(Category $category)
-    {
-        if (empty($category))
-        {
-            return redirect(route('categories.index'))->with('error', trans('messages.categories.not_found_admin'));
-        }
-
-        $category->is_active = !$category->is_active;
-        
-        if ($category->save()) 
-        {
-            $status = $category->is_active ? 'Active' : 'Inactive';
-
-            return redirect(route('categories.index'))->with('success', trans('messages.categories.status.success', ['status' => $status]));
-        }
-
-        return redirect(route('categories.index'))->with('error', trans('messages.categories.status.error'));
     }
 
 
@@ -170,14 +132,9 @@ class AdminCategoryController extends Controller
      */
     public function edit(Category $category)
     {
-        $parentCategories = Category::where(['is_active' => 1])
-        ->whereNull('parent_id')
-        ->selectRaw('categories.id,categories.category')
-        ->get();
-
         $categoryDetail = $category;
 
-        return view('admin.category.create', compact('parentCategories','categoryDetail'));
+        return view('admin.category.create', compact('categoryDetail'));
     }
 
     /**
@@ -191,11 +148,11 @@ class AdminCategoryController extends Controller
     {
         
         $this->validate($request, [
-            'category' => 'required'
+            'name' => 'required'
         ]);
 
         $category = Category::find($category->id);
-        $category->fill($request->all());
+        $category->name = $request->name;
 
         if ($category->save()) 
         {

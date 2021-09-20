@@ -32,9 +32,7 @@
                                     <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>Parent Category</th>
                                         <th>Category</th>
-                                        <th>Status</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -44,9 +42,7 @@
                                     <tfoot>
                                     <tr>
                                         <th>#</th>
-                                        <th>Parent Category</th>
                                         <th>Category</th>
-                                        <th>Status</th>
                                         <th>Action</th>
                                     </tr>
                                     </tfoot>
@@ -81,7 +77,7 @@
         table = $('#categories').DataTable({
             dom: 'Bfrtip',
             buttons: [
-                'copy', 'csv', 'excel', 'pdf', 'print',
+                'csv','print',
                 {
                 text: 'Add',
                 action: function ( e, dt, node, config ) {
@@ -99,9 +95,7 @@
             columns : [
                 
                 {data : 'id', name : 'id', orderable : false,visible:false },
-                {data : 'parent_category', name : 'parent_id', orderable : false },
-                {data : 'category', name : 'category'},
-                {data : 'status', name : 'is_active'},
+                {data : 'name', name : 'name'},
                 {data : 'action', name : 'action', orderable: false}
             ],
 

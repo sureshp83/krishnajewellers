@@ -1,12 +1,12 @@
 @extends('admin.layout.index')
-@section('title') Sliders @endsection
+@section('title') Orders @endsection
 
 @section('content')
 <section class="content">
 <div class="block-header">
     <div class="row">
         <div class="col-lg-7 col-md-6 col-sm-12">
-            <h2>Slider List
+            <h2>Orders List
             </h2>
         </div>
         <div class="col-lg-5 col-md-6 col-sm-12">
@@ -27,13 +27,15 @@
                             <div class="body">
                                 @include('admin.common.flash')
                                 <div class="table-responsive">
-                                <table id= "sliders" class="table table-bordered table-striped table-hover dataTable js-exportable">
+                                <table id= "orders" class="table table-bordered table-striped table-hover dataTable js-exportable">
                                     <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>Name</th>
-                                        <th>Slider</th>
-                                        <th>Status</th>
+                                        <th>Customer Name</th>
+                                        <th>Category</th>
+                                        <th>Jew Name</th>
+                                        <th>Total Cost</th>
+                                        <th>Order Date</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -43,9 +45,11 @@
                                     <tfoot>
                                     <tr>
                                         <th>#</th>
-                                        <th>Name</th>
-                                        <th>Slider</th>
-                                        <th>Status</th>
+                                        <th>Customer Name</th>
+                                        <th>Category</th>
+                                        <th>Jew Name</th>
+                                        <th>Total Cost</th>
+                                        <th>Order Date</th>
                                         <th>Action</th>
                                     </tr>
                                     </tfoot>
@@ -77,30 +81,32 @@
     var table;
     $(function(){
         
-        table = $('#sliders').DataTable({
+        table = $('#orders').DataTable({
             dom: 'Bfrtip',
             buttons: [
-              
+                'csv', 'print',
                 {
-                    text: 'Add',
-                    action: function ( e, dt, node, config ) {
-                        window.location.href = "{{route('sliders.create')}}"
-                    }
+                text: 'Add',
+                action: function ( e, dt, node, config ) {
+                    window.location.href = "{{route('orders.create')}}"
                 }
+            }
             ],
             processing: true,
             serverSide: true,
             "ajax" : {
-                "url" : '{{ url( route("sliders.search") ) }}',
+                "url" : '{{ url( route("orders.search") ) }}',
                 "type" : 'post',
                 'async' : false
             },
             columns : [
                 
                 {data : 'id', name : 'id', orderable : false,visible:false },
-                {data : 'name', name : 'name'},
-                {data : 'slider_image', name : 'slider_image'},
-                {data : 'status', name : 'is_active'},
+                {data : 'customer_name', name : 'customer_name'},
+                {data : 'category_name', name : 'category_name'},
+                {data : 'jewellery_name', name : 'jewellery_name'},
+                {data : 'total_cost', name : 'total_cost'},
+                {data : 'created_date', name : 'created_date'},
                 {data : 'action', name : 'action', orderable: false}
             ],
 

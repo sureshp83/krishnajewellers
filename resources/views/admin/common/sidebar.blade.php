@@ -32,6 +32,7 @@
             <li class="header">MAIN NAVIGATION</li>
             <li class="{{ request()->is('admin/dashboard*') ? 'active' : '' }}"> <a href="{{route('adminDashboard')}}"><i class="zmdi zmdi-home"></i><span>Dashboard</span> </a> </li>
             <li class="{{ request()->is('admin/customers*') ? 'active' : '' }}"> <a href="{{route('customers.index')}}"><i class="zmdi zmdi-accounts"></i><span>Customers</span> </a> </li>
+            <li class="{{ request()->is('admin/categories*') ? 'active' : '' }}"> <a href="{{route('categories.index')}}"><i class="zmdi zmdi-book"></i><span>Categories</span> </a> </li>
             <li class="{{ request()->is('admin/orders*') ? 'active' : '' }}"> <a href="{{route('orders.index')}}"><i class="zmdi zmdi-store"></i><span>Orders</span> </a> </li>
             <li class="{{ request()->is('admin/reports*') ? 'active' : '' }}"> <a href="{{route('reports.index')}}"><i class="zmdi zmdi-nfc"></i><span>Reports</span> </a> </li>
             <li class="{{ request()->is('admin/pages*') ? 'active' : '' }}"> <a href="javascript:void(0);" class="menu-toggle waves-effect waves-block"><i class="zmdi zmdi-copy"></i><span>Pages</span></a>

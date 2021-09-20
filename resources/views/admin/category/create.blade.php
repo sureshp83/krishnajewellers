@@ -32,49 +32,20 @@
 
                         {{ csrf_field() }}
                         <input type="hidden" name="categoryId" id="categoryId" value="{{$categoryDetail->id ?? ''}}">
-                            <div class="row">
-                                <div class="col-lg-6 col-md-6">
-                                    <div class="form-group form-float">
-                                        <div class="form-line">
-                                            
-                                            <label class="custom-label">Parent Category</label>
-                                            <select name="parent_id" id="parent_id" class="select2">
-                                                <option value="">Select Parent Category</option>
-                                                @forelse($parentCategories as $parent)
-                                                <option value="{{$parent->id}}" {{(!empty($categoryDetail) && $categoryDetail->parent_id == $parent->id) ? 'selected' : '' }}>{{$parent->category}}</option>
-                                                @empty
-                                                <option value="">Not found</option>
-                                                @endforelse
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            
                             
                             <div class="row">
                                 <div class="col-lg-6 col-md-6">
                                     <div class="form-group form-float">
                                         <div class="form-line">
                                             <label class="custom-label">Category Name</label>
-                                            <input type="text" class="form-control" name="category" id="category" required="" data-parsley-required-message="Please enter category name" value="{{$categoryDetail->category ?? ''}}">
+                                            <input type="text" class="form-control" name="name" id="name" required="" data-parsley-required-message="Please enter category name" value="{{$categoryDetail->name ?? ''}}">
                                         </div>
                                     </div>
                                 </div>        
                             </div>
 
-                            <div class="row">
-                                <div class="col-lg-6 col-md-6">
-                                    <div class="form-group">
-                                    <label class="custom-label">Status</label>
-                                        <input name="is_active" type="radio" id="active" class="with-gap radio-col-blue" {{(!empty($categoryDetail) && ($categoryDetail->is_active == 1)) ? 'checked' : (empty($categoryDetail) ? 'checked' : '')}} value="1" data-parsley-multiple="type">
-                                        <label for="active">Active</label>
-                                        <input name="is_active" type="radio" id="in_active" class="with-gap radio-col-blue" {{(!empty($categoryDetail) && ($categoryDetail->is_active == 0)) ? 'checked' : ''}} value="0" data-parsley-multiple="type">
-                                        <label for="in_active">In Active</label>
-                                        
-                                    </div>
-                                </div>      
-                            </div>
-
+                            
                             <div class="row">
                                 <div class="col-md-4 offset-md-2">
                                     <div class="form-group form-float">
