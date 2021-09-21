@@ -154,3 +154,15 @@ a {
     background-color: #17005d;
     border-color: #17005d;
 }
+
+.fixed-width-height {
+    max-width: 225px;
+    max-height: 220px;
+    min-width: 225px;
+    min-height: 220px;
+}
+
+.font-w-bold{
+    font-weight: 700 !important;
+    font-size: 18px !important;
+}

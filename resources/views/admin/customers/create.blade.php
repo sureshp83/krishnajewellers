@@ -65,29 +65,6 @@
                                     
                                 </div>
 
-                                
-
-                                <div class="row">
-                                   <div class="col-lg-6 col-md-6">
-                                        <div class="form-group form-float">
-                                            <div class="form-line focused">
-                                                <label class="form-label">Address</label>
-                                                <input class="form-control" type="text" id="address" name="address" value="{{$customerDetail->address ?? ''}}" placeholder="" >
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6 col-md-6">
-                                        <div class="form-group form-float">
-                                            <div class="form-line focused">
-                                                <label class="form-label">Description</label>
-                                                <textarea rows="10" cols="10" class="form-control no-resize auto-growth" name="description">{{$customerDetail->description ?? ''}}</textarea>
-                                                
-                                            </div>
-                                        </div>    
-                                    </div>   
-                                    
-                                </div>
-
                                 <div class="row">
                                     
                                     <div class="col-lg-4 col-md-4">
@@ -110,7 +87,40 @@
                                         </div>
                                     </div>
 
+                                    <div class="col-lg-4 col-md-4">
+                                        <div class="form-group form-float">
+                                            <div class="form-line focused">
+
+                                                <label class="form-label">Village Name</label>
+                                                <input type="text" name="village_name" class=" form-control" placeholder="" id="village_name" value="{{$customerDetail->village_name ?? ''}}">
+                                            </div>
+                                        </div>
+                                    </div>
+
                                 </div>
+
+                                <div class="row">
+                                   <div class="col-lg-6 col-md-6">
+                                        <div class="form-group form-float">
+                                            <div class="form-line focused">
+                                                <label class="form-label">Address</label>
+                                                <input class="form-control" type="text" id="address" name="address" value="{{$customerDetail->address ?? ''}}" placeholder="" >
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6">
+                                        <div class="form-group form-float">
+                                            <div class="form-line focused">
+                                                <label class="form-label">Description</label>
+                                                <textarea rows="10" cols="10" class="form-control no-resize auto-growth" name="description">{{$customerDetail->description ?? ''}}</textarea>
+                                                
+                                            </div>
+                                        </div>    
+                                    </div>   
+                                    
+                                </div>
+
+                                
 
                                 <div class="row">
                                     <div class="col-lg-6 col-md-6">
@@ -204,6 +214,10 @@
             email: {
                 required: false
             },
+            village_name : {
+                required: true,
+                lettersonly: true,
+            },
             phone_number: {
                 required: true,
                 maxlength: 12,
@@ -243,6 +257,9 @@
                 required: 'Please enter email address',
                 remote: 'This email address already exist'
             },
+            village_name : {
+                required: 'Please enter village name'
+            },
             phone_number: {
                 required: 'Please enter phone number',
                 maxlength: 'Phone number must be less than {0} characters',
@@ -271,7 +288,7 @@
                 
         }
     });
-    //.url('/'.{{$customerDetail->profile_image}})
+    
     @if(!empty($customerDetail))
         $("#imagePreview").css("background-image", "url({{$customerDetail->profile_image}})");
     @endif

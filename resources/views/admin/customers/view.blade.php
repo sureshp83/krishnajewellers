@@ -42,8 +42,14 @@
                                                 <spna class="font-15">{{$customerDetail->email}}</spna>
                                             </li>
                                             <li class="m-l-50 m-b-10">
+                                                <i class="zmdi zmdi-home col-app m-r-10"></i>
+                                                <spna class="font-15">{{$customerDetail->village_name}}</spna>
+                                            </li>
+                                            
+                                            <li class="m-l-50 m-b-10">
                                                 <i class="zmdi zmdi-smartphone-iphone col-app m-r-10"></i>
-                                                <spna class="font-15">{{$customerDetail->phone_number}}</spna>
+                                                <spna class="font-15">{{$customerDetail->phone_number}}</spna>,&nbsp;&nbsp;
+                                                <spna class="font-15">{{$customerDetail->alternate_phone_number}}</spna>
                                             </li>
                                             <li class="m-l-50 m-b-10">
                                             <spna class="font-15">Join Date : </spna>

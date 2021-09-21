@@ -20,6 +20,7 @@ class User extends Authenticatable
         'last_name',
         'address',
         'email', 
+        'village_name',
         'description',
         'phone_number',
         'alternate_phone_number'

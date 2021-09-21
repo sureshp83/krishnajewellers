@@ -46,7 +46,7 @@ class AdminCustomersController extends Controller
             $orderColumnId = $request->order[0]['column'];
             $orderColumn = str_replace('"','', $request->columns[$orderColumnId]['name']);
 
-            $query = User::selectRaw('users.id,phone_number,CONCAT(first_name," ",last_name) as name,
+            $query = User::selectRaw('users.id,phone_number,CONCAT(first_name," ",last_name) as name,users.village_name,
             users.email,CONCAT("'.$S3avatar.'",IFNULL(profile_image,"default-user.png")) AS profile_image');
             
             $query->where(function($query) use($request){
@@ -108,6 +108,7 @@ class AdminCustomersController extends Controller
             'first_name' => 'required',
             'last_name' => 'required',
             'email' => 'nullable',
+            'village_name' => 'required',
             'address' => 'required',
             'description' => 'nullable',
             'phone_number' => 'required',
@@ -151,7 +152,8 @@ class AdminCustomersController extends Controller
         $S3avatar = config('constant.CUSTOMER_AVATAR');
 
         $customerDetail = User::where('id', $id)
-        ->selectRaw('users.id,phone_number,CONCAT(first_name," ",last_name) as name,DATE_FORMAT(users.created_at,"'.config('constant.DATE_FORMAT_STR').'") as join_date,
+        ->selectRaw('users.id,phone_number,users.alternate_phone_number,users.village_name,
+        CONCAT(first_name," ",last_name) as name,DATE_FORMAT(users.created_at,"'.config('constant.DATE_FORMAT_STR').'") as join_date,
         users.email,CONCAT("'.$S3avatar.'",IFNULL(profile_image,"default-user.png")) AS profile_image')
         ->first();
         
@@ -219,6 +221,7 @@ class AdminCustomersController extends Controller
             'first_name' => 'required',
             'last_name' => 'required',
             'email' => 'nullable',
+            'village_name' => 'required',
             'address' => 'required',
             'description' => 'nullable',
             'phone_number' => 'required',

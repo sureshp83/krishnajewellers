@@ -33,6 +33,7 @@
                                         <th>#</th>
                                         <th>#</th>
                                         <th>Name</th>
+                                        <th>Village</th>
                                         <th>Email</th>
                                         <th>Phone No</th>
                                         <th>Action</th>
@@ -46,6 +47,7 @@
                                         <th>#</th>
                                         <th>#</th>
                                         <th>Name</th>
+                                        <th>Village</th>
                                         <th>Email</th>
                                         <th>Phone No</th>
                                         <th>Action</th>
@@ -102,6 +104,7 @@
                 {data : 'id', name : 'id', orderable : false,visible:false },
                 {data : 'profile_image', name : 'profile_image', orderable : false },
                 {data : 'name', name : 'name'},
+                {data : 'village_name', name : 'village_name'},
                 {data : 'email', name : 'email'},
                 {data : 'phone_number', name : 'phone_number'},
                 {data : 'action', name : 'action', orderable: false}

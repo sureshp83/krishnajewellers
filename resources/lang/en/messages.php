@@ -64,26 +64,6 @@ return [
         ],
     ],
 
-    'countries' => [
-        'not_found' => 'Country not found',
-        'add' => [
-            'success' => 'Country has been created successfully',
-            'error' => 'There is some problem to create country'
-        ],
-        'update' => [
-            'success' => 'Country has been updated successfully',
-            'error' => 'There is some problem to update country'
-        ],
-        'delete' => [
-            'success' => 'Country has been deleted successfully',
-            'error' => 'There is some problem to delete customer'
-        ],
-        'status' => [
-            'success' => 'Country has been :status successfully',
-            'error' => 'There is some problem to update status',
-        ],
-
-    ],
 
     'customers' => [
         'not_found' => 'Customer not found',
@@ -101,32 +81,6 @@ return [
         ],
         'status' => [
             'success' => 'Customer has been :status successfully',
-            'error' => 'There is some problem to update status',
-        ],
-
-    ],
-
-    'sellers' => [
-        'not_found' => 'Seller not found',
-        'add' => [
-            'success' => 'Seller has been created successfully',
-            'error' => 'There is some problem to create seller'
-        ],
-        'update' => [
-            'success' => 'Seller has been updated successfully',
-            'error' => 'There is some problem to update seller'
-        ],
-        'delete' => [
-            'success' => 'Seller has been deleted successfully',
-            'error' => 'There is some problem to delete seller'
-        ],
-        'status' => [
-            'success' => 'Seller has been :status successfully',
-            'error' => 'There is some problem to update status',
-        ],
-
-        'approval' => [
-            'success' => 'Seller has been :status successfully',
             'error' => 'There is some problem to update status',
         ],
 
@@ -153,22 +107,22 @@ return [
 
     ],
 
-    'products' => [
-        'not_found' => 'Product not found',
+    'orders' => [
+        'not_found' => 'Order not found',
         'add' => [
-            'success' => 'Product has been created successfully',
-            'error' => 'There is some problem to create product'
+            'success' => 'Order has been created successfully',
+            'error' => 'There is some problem to create order'
         ],
         'update' => [
-            'success' => 'Product has been updated successfully',
-            'error' => 'There is some problem to update product'
+            'success' => 'Order has been updated successfully',
+            'error' => 'There is some problem to update order'
         ],
         'delete' => [
-            'success' => 'Product has been deleted successfully',
-            'error' => 'There is some problem to delete product'
+            'success' => 'Order has been deleted successfully',
+            'error' => 'There is some problem to delete order'
         ],
         'status' => [
-            'success' => 'Product has been :status successfully',
+            'success' => 'Order has been :status successfully',
             'error' => 'There is some problem to update status',
         ],
 

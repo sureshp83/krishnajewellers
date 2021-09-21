@@ -15,6 +15,7 @@ class CreateOrdersTable extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
+            $table->string('unique_order_id',100)->default(null)->nullable();
             $table->bigInteger('customer_id')->default(null)->nullable();
             $table->bigInteger('category_id')->default(null)->nullable();
             $table->string('jewellery_name')->default(null)->nullable();
