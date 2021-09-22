@@ -31,12 +31,9 @@
                                     <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>#</th>
+                                        <th>QR Code</th>
                                         <th>Product Name</th>
-                                        <th>Product Name(ar)</th>
                                         <th>Category</th>
-                                        <th>Store Name</th>
-                                        <th>Seller Name</th>
                                         <th>Status</th>
                                         <th>Action</th>
                                     </tr>
@@ -47,14 +44,11 @@
                                     <tfoot>
                                     <tr>
                                     <th>#</th>
-                                        <th>#</th>
-                                        <th>Product Name</th>
-                                        <th>Product Name(ar)</th>
-                                        <th>Category</th>
-                                        <th>Store Name</th>
-                                        <th>Seller Name</th>
-                                        <th>Status</th>
-                                        <th>Action</th>
+                                    <th>QR Code</th>
+                                    <th>Product Name</th>
+                                    <th>Category</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
                                     </tr>
                                     </tfoot>
                                 </table>    
@@ -88,7 +82,13 @@
         table = $('#products').DataTable({
             dom: 'Bfrtip',
             buttons: [
-                'copy', 'csv', 'excel', 'pdf', 'print'
+                'csv', 'print',
+                {
+                text: 'Add',
+                action: function ( e, dt, node, config ) {
+                    window.location.href = "{{route('products.create')}}"
+                }
+            }
             ],
             processing: true,
             serverSide: true,
@@ -100,12 +100,9 @@
             columns : [
                 
                 {data : 'id', name : 'id', orderable : false,visible:false },
-                {data : 'product_image', name : 'product_image', orderable : false },
+                {data : 'qr_code_image', name : 'qr_code_image', orderable : false },
                 {data : 'product_name', name : 'product_name'},
-                {data : 'product_name_ar', name : 'product_name_ar'},
                 {data : 'category', name : 'category'},
-                {data : 'store_name', name : 'store_name'},
-                {data : 'seller_name', name : 'seller_name'},
                 {data : 'status', name : 'is_active'},
                 {data : 'action', name : 'action', orderable: false}
             ],

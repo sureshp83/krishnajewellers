@@ -162,6 +162,13 @@ a {
     min-height: 220px;
 }
 
+.fixed-w-h-qrcode {
+    max-width: 350px;
+    max-height: 300px;
+    min-width: 350px;
+    min-height: 300px;
+}
+
 .font-w-bold{
     font-weight: 700 !important;
     font-size: 18px !important;

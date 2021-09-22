@@ -27,6 +27,7 @@ class CreateOrdersTable extends Migration
             $table->double('other_charge')->default(0)->nullable();
             $table->double('total_cost')->default(0)->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

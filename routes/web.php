@@ -50,6 +50,12 @@ Route::prefix('admin')->group(function(){
         Route::post('customers/search', 'Admin\AdminCustomersController@search')->name('customers.search');
         Route::post('customers/status/{customer}', 'Admin\AdminCustomersController@changeStatus')->name('customers.status');
 
+        // Products
+        Route::resource('products', 'Admin\AdminProductController');
+        Route::post('products/search', 'Admin\AdminProductController@search')->name('products.search');
+        Route::post('products/status/{product}', 'Admin\AdminProductController@changeStatus')->name('products.status');
+
+
         // orders
         Route::resource('categories', 'Admin\AdminCategoryController');
         Route::post('categories/search', 'Admin\AdminCategoryController@search')->name('categories.search');

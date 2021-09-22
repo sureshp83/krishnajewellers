@@ -107,6 +107,27 @@ return [
 
     ],
 
+    'products' => [
+        'not_found' => 'Product not found',
+        'add' => [
+            'success' => 'Product has been created successfully',
+            'error' => 'There is some problem to create product'
+        ],
+        'update' => [
+            'success' => 'Product has been updated successfully',
+            'error' => 'There is some problem to update product'
+        ],
+        'delete' => [
+            'success' => 'Product has been deleted successfully',
+            'error' => 'There is some problem to delete product'
+        ],
+        'status' => [
+            'success' => 'Product has been :status successfully',
+            'error' => 'There is some problem to update status',
+        ],
+
+    ],
+
     'orders' => [
         'not_found' => 'Order not found',
         'add' => [

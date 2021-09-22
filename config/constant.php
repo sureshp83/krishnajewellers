@@ -8,5 +8,7 @@ return [
     'DATE_TIME_FORMAT_STR' => '%b %d, %Y %h:%i %p',
     'ADMIN_AVATAR' => 'admin-assets/images/profile_image/',
     'CUSTOMER_AVATAR' => 'admin-assets/images/customer_avatar/',
-    'DESIGN_PATH' => 'admin-assets/images/design_image/'
+    'DESIGN_PATH' => 'admin-assets/images/design_image/',
+    'PRODUCT_PATH' => 'admin-assets/images/product_image/',
+    'QR_CODE_PATH' => 'admin-assets/images/qr_code_image/'
 ];
