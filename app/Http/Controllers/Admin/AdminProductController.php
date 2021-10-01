@@ -237,8 +237,15 @@ class AdminProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Product $product)
+    public function destroy(Request $request, Product $product)
     {   
+        $admin = \Auth::guard('admin')->user();
+        
+        if(!\Hash::check($request->password, $admin->password))
+        {
+            return redirect(route('products.index'))->with('error', trans('messages.products.delete.invalid_password'));
+        }
+
         // remove qr code
         $fileNameWithPath = public_path(config('constant.QR_CODE_PATH')).$product->qr_code_image;
 

@@ -63,25 +63,35 @@
     //For delete
     $(document).on("click",'.btnDelete',function(event) {
 
-        event.preventDefault();
-        var title = $(this).data('title');
-        var url = $(this).data('url');
-        var form = '';
-        swal({
+            event.preventDefault();
+            var title = $(this).data('title');
+            var url = $(this).data('url');
+            
+            swal({
             title: "Are you sure?",
             text: "You will not be able to recover this "+title,
-            type: "warning",
+            type: "input",
             showCancelButton: true,
             confirmButtonColor: "#DD6B55",
-            confirmButtonText: "Yes, delete it!",
-      },    function (result) {
-            if(result)
+            closeOnConfirm: false,
+            animation: "slide-from-top",
+            inputPlaceholder: "Enter Password"
+        }, function (inputValue) {
+            if (inputValue === false) return false;
+            if (inputValue === "") {
+                swal.showInputError("You need to Enter Password!"); return false
+            }
+            else
             {
                 form = $('#deleteForm');
+                $('#deleteForm #password').val(inputValue);
+                
                 form.attr('action', url);
                 form.submit();
             }
-    });
+        
+        });
+
     });
 
  

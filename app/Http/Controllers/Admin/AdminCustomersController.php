@@ -155,6 +155,7 @@ class AdminCustomersController extends Controller
         ->selectRaw('users.id,phone_number,users.alternate_phone_number,users.village_name,
         CONCAT(first_name," ",last_name) as name,DATE_FORMAT(users.created_at,"'.config('constant.DATE_FORMAT_STR').'") as join_date,
         users.email,CONCAT("'.$S3avatar.'",IFNULL(profile_image,"default-user.png")) AS profile_image')
+        ->with('orders')
         ->first();
         
         return view('admin.customers.view', compact('customerDetail'));
@@ -259,8 +260,15 @@ class AdminCustomersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
+        $admin = \Auth::guard('admin')->user();
+        
+        if(!\Hash::check($request->password, $admin->password))
+        {
+            return redirect(route('customers.index'))->with('error', trans('messages.customers.delete.invalid_password'));
+        }
+        
         $customer = User::find($id);
         
         if($customer->delete())

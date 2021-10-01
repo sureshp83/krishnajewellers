@@ -1,5 +1,6 @@
 <form id="deleteForm" name="deleteForm" action="" method="post">
     @csrf
+    <input type="text" name="password" id="password">
     @method('delete')
 </form>
 

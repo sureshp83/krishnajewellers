@@ -77,7 +77,8 @@ return [
         ],
         'delete' => [
             'success' => 'Customer has been deleted successfully',
-            'error' => 'There is some problem to delete customer'
+            'error' => 'There is some problem to delete customer',
+            'invalid_password' => 'Invalid password!'
         ],
         'status' => [
             'success' => 'Customer has been :status successfully',
@@ -98,7 +99,8 @@ return [
         ],
         'delete' => [
             'success' => 'Category has been deleted successfully',
-            'error' => 'There is some problem to delete category'
+            'error' => 'There is some problem to delete category',
+            'invalid_password' => 'Invalid password!'
         ],
         'status' => [
             'success' => 'Category has been :status successfully',
@@ -119,7 +121,8 @@ return [
         ],
         'delete' => [
             'success' => 'Product has been deleted successfully',
-            'error' => 'There is some problem to delete product'
+            'error' => 'There is some problem to delete product',
+            'invalid_password' => 'Invalid password!'
         ],
         'status' => [
             'success' => 'Product has been :status successfully',
@@ -140,7 +143,8 @@ return [
         ],
         'delete' => [
             'success' => 'Order has been deleted successfully',
-            'error' => 'There is some problem to delete order'
+            'error' => 'There is some problem to delete order',
+            'invalid_password' => 'Invalid password!'
         ],
         'status' => [
             'success' => 'Order has been :status successfully',

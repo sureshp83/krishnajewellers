@@ -169,8 +169,16 @@ class AdminCategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
+        $admin = \Auth::guard('admin')->user();
+        
+        if(!\Hash::check($request->password, $admin->password))
+        {
+            return redirect(route('categories.index'))->with('error', trans('messages.categories.delete.invalid_password'));
+        }
+        
+
         $category = Category::find($id);
         
         if($category->delete())

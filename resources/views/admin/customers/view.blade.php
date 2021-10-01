@@ -66,6 +66,55 @@
                     <!-- End View -->
                 </div>
             </div>
+
+            <div class="row clearfix">
+                <div class="col-lg-12 col-md-12 col-sm-12">
+                    <div class="card">
+                        <div class="header">
+                            <h2> Customer Order History</h2>
+                        </div>
+
+                        <div class="body">
+                            <div class="row clearfix">
+                                <div class="col-md-12 col-lg-12">
+                                    <div class="panel-group" id="accordion_10" role="tablist" aria-multiselectable="true">
+
+                                        @foreach($customerDetail->orders as $key => $customerOrder)
+                                        <div class="panel panel-col-green">
+                                            <div class="panel-heading" role="tab" id="headingOne_{{$key}}">
+                                                <h4 class="panel-title"><a role="button" data-toggle="collapse" data-parent="#accordion_{{$key}}" href="#collapseOne_{{$key}}" aria-expanded="true" aria-controls="collapseOne_{{$key}}"> {{$customerOrder->unique_order_id}} </a> </h4>
+                                            </div>
+                                            <div id="collapseOne_{{$key}}" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne_{{$key}}">
+                                                <div class="panel-body">
+                                                    <table class="table">
+                                                        <thead>
+                                                            <th>Date</th>
+                                                            <th>Credit Amount</th>
+                                                            <th>Debit Amount</th>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>{{$customerOrder->created_at}}</td>
+                                                                <td>{{$customerOrder->total_cost}}</td>
+                                                                <td>{{$customerOrder->total_cost}}</td>
+                                                            </tr>    
+                                                        </tbody>        
+                                                    </table>    
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @endforeach
+                                    
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>        
+            </div>
+
             @include('admin.common.footer_detail')           
         </div>   
     </section>
