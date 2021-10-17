@@ -18,6 +18,12 @@ class Order extends Model
         'weight',
         'current_rate',
         'making_charge',
-        'other_charge'
+        'other_charge',
+        'payment_type'
     ];
+
+    public function order_payments()
+    {
+        return $this->hasMany('App\Model\OrderPayment', 'order_id');
+    }
 }

@@ -117,7 +117,9 @@ class AdminProductController extends Controller
             'product_name' => 'required',
             'category_id' => 'required',
             'description' => 'nullable'
-        ]);
+        ]); 
+
+        \DB::begintransaction();
 
         $product = new Product();
         $product->fill($request->all());
@@ -129,15 +131,17 @@ class AdminProductController extends Controller
 
             $encrypted = base64_encode($product->id);
 
-            $qrCodePath = public_path(config('constant.QR_CODE_PATH'));
-            $fullPath = $qrCodePath.'qr_prod_'.$product->id.'_tab.jpg';
+            $qrCodePath = url(config('constant.QR_CODE_PATH'));
+            
+            $fullPath = $qrCodePath.'/qr_prod_'.$product->id.'_tab.jpg';
             
             $qrCode = QRCodeHelper::generateQrCode( $encrypted, $fullPath);
-            
+            dd($qrCode);
             $product->qr_code = $qrCode;
             $product->qr_code_image = 'qr_prod_'.$product->id.'_tab.jpg';
             $product->save();
-            
+
+            \DB::commit();
 
             return redirect(route('products.index'))->with('success', trans('messages.products.add.success'));
         }
@@ -220,7 +224,7 @@ class AdminProductController extends Controller
             'description' => 'nullable'
         ]);
 
-        $product = new Product();
+        $product = Product::find($id);
         $product->fill($request->all());
         
         if($product->save())

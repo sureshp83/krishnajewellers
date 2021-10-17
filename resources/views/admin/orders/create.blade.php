@@ -140,6 +140,61 @@
                                     </div>    
 
                                 </div>
+                                <label class="custom-label font-w-bold">Payment Detail</label>
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6">
+                                        <div class="form-group form-float">
+                                            <label class="custom-label">Payment Type</label>
+                                            <select name="payment_type" id="payment_type" class="select2">
+                                                
+                                                <option value="1" {{(!empty($orderDetail) && $orderDetail->payment_type == 1) ? 'selected' : '' }}>Advance Full Payment</option>
+                                                <option value="2" {{(!empty($orderDetail) && $orderDetail->payment_type == 2) ? 'selected' : '' }}>Partial Payment</option>
+                                                <option value="3" {{(!empty($orderDetail) && $orderDetail->payment_type == 3) ? 'selected' : '' }}>After Delivery</option>
+                                                <option value="4" {{(!empty($orderDetail) && $orderDetail->payment_type == 4) ? 'selected' : '' }}>Old Jewellery</option>
+
+                                            </select>
+                                            
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-6 col-md-6 paid_payment">
+                                        <div class="form-group form-float">
+                                            <div class="form-line focused">
+                                                <label class="custom-label">Paid Payment</label>
+                                                <input type="text" name="paid_amount" class="form-control" id="paid_amount" value="{{$orderDetail->paid_payment ?? ''}}" {{((!empty($orderDetail) && $orderDetail->payment_type != 3) ? 'disabled' : '')}}>
+                                            </div>    
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                @if(!empty($orderDetail))
+                                <div class="row">
+                                    <div class="col-lg-8 col-md-8">
+                                    <label class="custom-label">Payment History</label>
+                                        <table class="table">
+                                            <thead>
+                                                <th>Date</th>    
+                                                <th>Paid Payment</th>
+                                                <th>Due Payment</th>    
+                                            </thead>
+                                            <tbody>
+                                                @foreach($orderDetail->order_payments as $key => $payment)
+                                                    <tr>
+                                                        <td>{{$payment->created_at}}</td>
+                                                        <td>{{$payment->paid_amount}}</td>
+                                                        <td>{{$payment->remain_amount}}</td>
+                                                    </tr>    
+                                                @endforeach
+                                            </tbody>        
+                                        </table>
+                                    </div>
+                                    
+                                    <div class="col-lg-2 col-md-2">
+                                        <a href="javascript:void(0);" class="btn btn-success addMorePayment">Add More Payment</a>
+                                    
+                                    </div>    
+                                </div>
+                                @endif    
 
                                 <div class="row">
                                     <div class="col-lg-6 col-md-6">
@@ -186,7 +241,30 @@
         @include('admin.common.footer_detail')
     </div>
 </section>
+
+
 @endsection
+<div class="modal fade " id="colorModal" tabindex="-1" role="dialog" >
+    <div class="modal-dialog" role="document">
+        <div class="modal-content ">
+            <div class="modal-header">
+                <h4 class="modal-title" id="defaultModalLabel">Add Payment</h4>
+            </div>
+            <div class="modal-body ">
+                <div class="form-group">
+                    <label class="custom-label">Payment Amount</label>
+                    <div class="form-line focused">
+                        <input type="text" name="paid_payment" class="form-control" id="paid_payment">
+                    </div>
+                </div>    
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary">SAVE</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">CLOSE</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 @section('js')
 
@@ -200,10 +278,27 @@ $("#customer_id").select2({width: '100%'}).on("change", function(e) {
     }
 });
 
+$("#payment_type").select2({width: '100%'}).on("change", function(e) {
+    if(e.val)
+    {
+        $("#payment_type option[value='"+e.val+"']").attr("selected","selected");
+    }
+});
+
 $("#category_id").select2({width: '100%'}).on("change", function(e) {
     if(e.val)
     {
         $("#category_id option[value='"+e.val+"']").attr("selected","selected");
+    }
+});
+
+$(document).on('change', '#payment_type', function(){
+
+    $('.paid_payment').show();
+    if($(this).val() == 3)
+    {
+        // hide paid payment if after delivery
+        $('.paid_payment').hide();
     }
 });
 
@@ -212,7 +307,7 @@ $(document).on('keyup', '#current_rate', function(){
     var total = parseFloat($(this).val()) + parseFloat(($('#making_charge').val() != "") ? $('#making_charge').val() : 0)
      + parseFloat(($('#other_charge').val() != "") ? $('#other_charge').val() : 0);
     
-    $('.totalCost').text(total);
+    $('.totalCost').text((isNaN(total)) ? 0 : total);
 });
 
 $(document).on('focusout', '#current_rate', function(){
@@ -224,7 +319,7 @@ $(document).on('keyup', '#making_charge', function(){
     {
         var total = parseFloat($(this).val()) + parseFloat(($('#current_rate').val() != "") ? $('#current_rate').val() : 0)
             + parseFloat(($('#other_charge').val() != "") ? $('#other_charge').val() : 0);
-        $('.totalCost').text(total);
+        $('.totalCost').text((isNaN(total)) ? 0 : total);
     }
 });
 
@@ -237,7 +332,7 @@ $(document).on('keyup', '#other_charge', function(){
     {
         var total = parseFloat($(this).val()) + parseFloat(($('#current_rate').val() != "") ? $('#current_rate').val() : 0)
             + parseFloat(($('#making_charge').val() != "") ? $('#making_charge').val() : 0);
-        $('.totalCost').text(total);
+        $('.totalCost').text((isNaN(total)) ? 0 : total);
     }
 });
 
@@ -287,6 +382,9 @@ $(document).on('focusout', '#other_charge', function(){
             },
             current_rate: {
                 required: true,
+            },
+            payment_type : {
+                required: true,
             }
         },
         messages: {
@@ -305,6 +403,9 @@ $(document).on('focusout', '#other_charge', function(){
             },
             current_rate : {
                 required: 'Please enter current rate'
+            },
+            payment_type : {
+                required: 'Please select payment type'
             }
         },
         submitHandler: function (form){   
@@ -337,5 +438,11 @@ $(document).on('focusout', '#other_charge', function(){
             reader.readAsDataURL(input.files[0]);
         }
     }
+
+    // add more payments
+    $(document).on('click', '.addMorePayment', function(){
+       
+        $('#colorModal').modal('show');
+    });
 </script>
 @endsection

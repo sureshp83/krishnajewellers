@@ -30,12 +30,14 @@
                                 <table id= "orders" class="table table-bordered table-striped table-hover dataTable js-exportable">
                                     <thead>
                                     <tr>
+                                        <th>#</th>
                                         <th>Order ID</th>
                                         <th>Customer Name</th>
                                         <th>Category</th>
                                         <th>Jew Name</th>
                                         <th>Total Cost</th>
                                         <th>Order Date</th>
+                                        <th>Order Status</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -44,12 +46,14 @@
                                 </tbody>
                                     <tfoot>
                                     <tr>
+                                        <th>#</th>
                                         <th>Order ID</th>
                                         <th>Customer Name</th>
                                         <th>Category</th>
                                         <th>Jew Name</th>
                                         <th>Total Cost</th>
                                         <th>Order Date</th>
+                                        <th>Order Status</th>
                                         <th>Action</th>
                                     </tr>
                                     </tfoot>
@@ -100,13 +104,14 @@
                 'async' : false
             },
             columns : [
-                
+                {data : 'id', name : 'id', visible:false},
                 {data : 'unique_order_id', name : 'unique_order_id'},
                 {data : 'customer_name', name : 'customer_name'},
                 {data : 'category_name', name : 'category_name'},
                 {data : 'jewellery_name', name : 'jewellery_name'},
                 {data : 'total_cost', name : 'total_cost'},
                 {data : 'created_date', name : 'created_date'},
+                {data : 'status', name : 'status'},
                 {data : 'action', name : 'action', orderable: false}
             ],
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Model\Category;
 use App\Model\Order;
+use App\Model\OrderPayment;
 use App\Model\User;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\Paginator;
@@ -48,7 +49,7 @@ class AdminOrdersController extends Controller
             $orderColumn = str_replace('"','', $request->columns[$orderColumnId]['name']);
 
             $query = Order::selectRaw('orders.id,orders.unique_order_id,CONCAT(customer.first_name," ",customer.last_name) as customer_name,
-            orders.jewellery_name,orders.weight,orders.total_cost,categories.name as category_name,
+            orders.jewellery_name,orders.weight,orders.total_cost,categories.name as category_name,orders.status,
             DATE_FORMAT(orders.created_at,"'.config('constant.DATE_FORMAT_STR').'") as created_date')
             ->leftJoin('users as customer', 'customer.id', 'orders.customer_id')
             ->leftJoin('categories', 'categories.id', 'orders.category_id');
@@ -77,7 +78,11 @@ class AdminOrdersController extends Controller
                 //$deleteRoute = route('orders.destroy', $params);
                 $viewRoute = route('orders.show', $params);
                 $editRoute = route('orders.edit', $params);
+                
 
+                $status = ($order['status'] == 'PENDING') ? '<span class="label label-warning">PENDING</span>' : '<span class="label label-success">DELIVERED</span>';
+                
+                $orders['data'][$key]['status'] = $status;
                 $orders['data'][$key]['action'] ='<a href="' . $viewRoute . '" class="btn btn-raised waves-effect waves-float waves-light-blue m-l-5" title="View order"><i class="zmdi zmdi-eye"></i></a>&nbsp&nbsp';
                 $orders['data'][$key]['action'] .='<a href="' . $editRoute . '" class="btn btn-raised waves-effect waves-float waves-light-blue m-l-5" title="Edit order"><i class="zmdi zmdi-edit"></i></a>&nbsp&nbsp';
                 //$orders['data'][$key]['action'] .= '<a href="javascript:void(0);" data-url="'.$deleteRoute.'" class="btn btn-raised waves-effect waves-float waves-light-blue m-l-5 btnDelete" data-title="order" data-type="confirm" title="delete customer"><i class="zmdi zmdi-delete"></i> </a>&nbsp&nbsp';
@@ -139,6 +144,17 @@ class AdminOrdersController extends Controller
 
         if($order->save())
         {
+            if($request->payment_type != "3")
+            {
+                $orderPayment = new OrderPayment();
+                $orderPayment->order_id = $order->id;
+                $orderPayment->order_amount = $order->total_cost;
+                $orderPayment->paid_amount = $request->paid_amount;
+                $orderPayment->remain_amount = ($order->total_cost - $request->paid_amount);
+                $orderPayment->save();
+    
+            }
+            
             return redirect(route('orders.index'))->with('success', trans('messages.orders.add.success'));
         }
 
@@ -157,7 +173,7 @@ class AdminOrdersController extends Controller
 
         $orderDetail = Order::where('orders.id', $order->id)->selectRaw('orders.*,categories.name as category_name,
         CONCAT(users.first_name," ",users.last_name," (",IFNULL(users.village_name,""),")") as customer_name,
-        CONCAT("'.$S3_PATH.'","/",IFNULL(design_image,"default-user.png")) as design_image,
+        CONCAT("'.$S3_PATH.'","/",IFNULL(design_image,"default-user.png")) as design_image,orders.payment_type,
         DATE_FORMAT(orders.created_at,"'.config('constant.DATE_TIME_FORMAT').'") as order_datetime')
         ->leftJoin('users','users.id', 'orders.customer_id')
         ->leftJoin('categories','categories.id', 'orders.category_id')
@@ -178,8 +194,11 @@ class AdminOrdersController extends Controller
         $S3_PATH = url(config('constant.DESIGN_PATH'));
 
         $orderDetail = Order::where('id', $order->id)->selectRaw('orders.*,
-        CONCAT("'.$S3_PATH.'","/",IFNULL(design_image,"default-user.png")) as design_image')->first();
-
+        CONCAT("'.$S3_PATH.'","/",IFNULL(design_image,"default-user.png")) as design_image,
+        (select order_payments.paid_amount from order_payments where order_payments.order_id=orders.id order by order_payments.id limit 1) as paid_payment')        
+        ->with('order_payments')
+        ->first();
+        
         $customers = User::selectRaw('users.id,CONCAT(users.first_name," ",users.last_name," (",IFNULL(users.village_name,""),")") as customer_name')->get();
         $categories = Category::selectRaw('categories.id,categories.name as category_name')->get();
 

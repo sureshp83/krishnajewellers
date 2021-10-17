@@ -26,6 +26,8 @@ class CreateOrdersTable extends Migration
             $table->double('making_charge')->default(0)->nullable();
             $table->double('other_charge')->default(0)->nullable();
             $table->double('total_cost')->default(0)->nullable();
+            $table->integer('payment_type')->comment('1=> Advance, 2=> Partial, 3=>After delivery, 4=> Old Jewellery');
+            $table->enum('status',['PENDING','DELIVERED'])->default('PENDING');
             $table->timestamps();
             $table->softDeletes();
         });
