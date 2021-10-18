@@ -2,6 +2,7 @@
 @section('title') Orders @endsection
 @section('css')
 <link rel="stylesheet" href="{{ url('admin-assets/plugins/select2/dist/css/select2.css') }}" />
+<link rel="stylesheet" href="{{ url('admin-assets/toastr-master/toastr.css') }}" />
 @endsection
 @section('content')
 <section class="content">
@@ -161,7 +162,7 @@
                                         <div class="form-group form-float">
                                             <div class="form-line focused">
                                                 <label class="custom-label">Paid Payment</label>
-                                                <input type="text" name="paid_amount" class="form-control" id="paid_amount" value="{{$orderDetail->paid_payment ?? ''}}" {{((!empty($orderDetail) && $orderDetail->payment_type != 3) ? 'disabled' : '')}}>
+                                                <input type="text" name="paid_amount" class="form-control number" id="paid_amount" value="{{$orderDetail->paid_payment ?? ''}}" {{((!empty($orderDetail) && $orderDetail->payment_type != 3) ? 'disabled' : '')}}>
                                             </div>    
                                         </div>
                                     </div>
@@ -181,18 +182,20 @@
                                                 @foreach($orderDetail->order_payments as $key => $payment)
                                                     <tr>
                                                         <td>{{$payment->created_at}}</td>
-                                                        <td>{{$payment->paid_amount}}</td>
-                                                        <td>{{$payment->remain_amount}}</td>
+                                                        <td>₹{{$payment->paid_amount}}</td>
+                                                        <td>₹{{$payment->remain_amount}}</td>
                                                     </tr>    
                                                 @endforeach
                                             </tbody>        
                                         </table>
                                     </div>
                                     
+                                    @if($orderDetail->status != "PAYMENT_DONE")
                                     <div class="col-lg-2 col-md-2">
-                                        <a href="javascript:void(0);" class="btn btn-success addMorePayment">Add More Payment</a>
+                                        <a href="javascript:void(0);" class="btn btn-success addMorePayment" data-orderId="{{$orderDetail->id}}">Add More Payment</a>
                                     
                                     </div>    
+                                    @endif
                                 </div>
                                 @endif    
 
@@ -244,7 +247,7 @@
 
 
 @endsection
-<div class="modal fade " id="colorModal" tabindex="-1" role="dialog" >
+<div class="modal fade " id="paymentModal" tabindex="-1" role="dialog" >
     <div class="modal-dialog" role="document">
         <div class="modal-content ">
             <div class="modal-header">
@@ -254,12 +257,13 @@
                 <div class="form-group">
                     <label class="custom-label">Payment Amount</label>
                     <div class="form-line focused">
-                        <input type="text" name="paid_payment" class="form-control" id="paid_payment">
+                        <input type="text" name="paid_payment" class="form-control decimalOnly" id="paid_payment">
+                        <input type="hidden" name="orderId" id="orderId" value="">
                     </div>
                 </div>    
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary">SAVE</button>
+                <button type="button" class="btn btn-primary addMorePaymentSave">SAVE</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">CLOSE</button>
             </div>
         </div>
@@ -269,7 +273,18 @@
 @section('js')
 
 <script src="{{ url('admin-assets/plugins/select2/dist/js/select2.min.js')}}"></script>
+<!-- Flash message-->
+<script src="{{ url('admin-assets/toastr-master/toastr.min.js') }}"></script>
+
+
 <script>
+
+$(document).ready(function() {
+
+@include('admin.common.toaster_message')
+
+
+});
 
 $("#customer_id").select2({width: '100%'}).on("change", function(e) {
     if(e.val)
@@ -441,8 +456,46 @@ $(document).on('focusout', '#other_charge', function(){
 
     // add more payments
     $(document).on('click', '.addMorePayment', function(){
-       
-        $('#colorModal').modal('show');
+
+        var orderId = $(this).data('orderid');
+
+        $('#paid_payment-error').hide();
+        $('#paymentModal #orderId').val(orderId);
+        $('#paymentModal').modal('show');
     });
+
+    $(document).on('click', '#paymentModal .addMorePaymentSave', function(){
+        if($('#paymentModal #paid_payment').val() == "")
+        {
+            $('#paid_payment-error').text('Please enter amount');
+            $('#paid_payment-error').show();
+            return false;
+        }
+
+        var param = {'paid_payment' : $('#paymentModal #paid_payment').val(), 'order_id' : $('#paymentModal #orderId').val()};
+        $.ajax({
+            url : "{{route('orders.add-more-payment')}}",
+            data : param,
+            type : "post",
+            async : false,
+            success : function(response)
+            {
+                if(response.code != 1)
+                {
+                    toastr.error(response.message,'Error');
+                }
+                else
+                {
+                    toastr.success(response.message,'Success');
+                }
+                $('#paymentModal').modal('hide');
+                setTimeout(function() {
+                    location.reload();
+                }, 3000);
+                
+            }
+        });
+    });
+
 </script>
 @endsection

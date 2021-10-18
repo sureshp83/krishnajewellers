@@ -79,8 +79,20 @@ class AdminOrdersController extends Controller
                 $viewRoute = route('orders.show', $params);
                 $editRoute = route('orders.edit', $params);
                 
+                if($order['status'] == 'PENDING')
+                {
+                    $status = '<span class="label label-warning">PENDING</span>';
+                }
+                else if($order['status'] == 'PAYMENT_DONE')
+                {
+                    $status = '<span class="label label-primary">PAYMENT DONE</span>';
+                }
+                else if($order['status'] == 'DELIVERED')
+                {
+                    $status = '<span class="label label-success">DELIVERED</span>';
+                }
 
-                $status = ($order['status'] == 'PENDING') ? '<span class="label label-warning">PENDING</span>' : '<span class="label label-success">DELIVERED</span>';
+                //$status = ($order['status'] == 'PENDING') ? '<span class="label label-warning">PENDING</span>' : '<span class="label label-success">DELIVERED</span>';
                 
                 $orders['data'][$key]['status'] = $status;
                 $orders['data'][$key]['action'] ='<a href="' . $viewRoute . '" class="btn btn-raised waves-effect waves-float waves-light-blue m-l-5" title="View order"><i class="zmdi zmdi-eye"></i></a>&nbsp&nbsp';
@@ -203,6 +215,63 @@ class AdminOrdersController extends Controller
         $categories = Category::selectRaw('categories.id,categories.name as category_name')->get();
 
         return view('admin.orders.create', compact('customers','categories', 'orderDetail'));
+    }
+
+    /**
+     * Add more order payment
+     * @param Request $request
+     * 
+     * @return Response Json
+     * 
+     */
+    public function addMoreOrderPayment(Request $request)
+    {
+        $this->validate($request, [
+            'paid_payment' => 'required',
+            'order_id' => 'required'
+        ]);
+
+        $order = Order::find($request->order_id);
+       
+        if(empty($order))
+        {
+            return $this->toJson([], trans('messages.orders.not_found'), 0);
+        }
+
+        if($order->status == "PAYMENT_DONE")
+        {
+            return $this->toJson([], trans('messages.orders.payment_already_done'), 0);
+        }
+
+        $lastPayment = OrderPayment::where('order_id', $request->order_id)->latest('id')->first();
+        
+        $orderPayment = new OrderPayment();
+        $orderPayment->order_id = $request->order_id;
+        $orderPayment->order_amount = $order->total_cost;
+        $orderPayment->paid_amount = $request->paid_payment;
+        $orderPayment->remain_amount = ((($order->total_cost - $request->paid_payment) > 0) ? ($order->total_cost - $request->paid_payment) : 0);
+
+        if(!empty($lastPayment))
+        {
+            if($lastPayment->remain_amount == 0)
+            {
+                return $this->toJson([], trans('messages.orders.payment_already_done'), 0);
+            }
+
+            $orderPayment->remain_amount = ((($lastPayment->remain_amount - $request->paid_payment) > 0) ? ($lastPayment->remain_amount - $request->paid_payment) : 0);
+        }
+        
+        if($orderPayment->save())
+        {
+            if($orderPayment->remain_amount == 0)
+            {
+                $order->status = 'PAYMENT_DONE';
+                $order->save();
+            }
+
+            return $this->toJson([], trans('messages.orders.payment_success'), 1);
+        }
+        
     }
 
     /**

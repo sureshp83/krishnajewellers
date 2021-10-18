@@ -133,6 +133,8 @@ return [
 
     'orders' => [
         'not_found' => 'Order not found',
+        'payment_success' => 'Your order payment added successfully',
+        'payment_already_done' => 'Order payment already done',
         'add' => [
             'success' => 'Order has been created successfully',
             'error' => 'There is some problem to create order'

@@ -64,7 +64,8 @@ Route::prefix('admin')->group(function(){
         // orders
         Route::resource('orders', 'Admin\AdminOrdersController');
         Route::post('orders/search', 'Admin\AdminOrdersController@search')->name('orders.search');
-        
+        Route::post('add-more-payment', 'Admin\AdminOrdersController@addMoreOrderPayment')->name('orders.add-more-payment');
+
         // reports
         Route::resource('reports', 'Admin\AdminCategoryController');
         Route::post('reports/search', 'Admin\AdminCategoryController@search')->name('categories.search');

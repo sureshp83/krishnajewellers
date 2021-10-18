@@ -24,9 +24,10 @@
 <script src="{{ url('admin-assets/plugins/sweetalert/sweetalert.min.js')}}"></script>
 
 
- {{-- <script src="{{ url('admin-assets/sweetalert/sweetalert.min.js')}}"></script> --}}
+ <script src="{{ url('admin-assets/js/custom_validate.js')}}"></script>
 
 <script>
+    
     
     $.ajaxSetup({
         headers: {
@@ -146,22 +147,7 @@
             });
         });
 
-    $(document).on("keypress",'.numeric',function(evt,value) {
-        var charCode = (evt.which) ? evt.which : evt.keyCode;
-        if (charCode > 31  && (charCode < 48 || charCode > 57))
-            return false;
-
-        return true;
-    });
-
-    $(document).on("keypress",'.decimalOnly',function(evt) {
-
-        var charCode = (evt.which) ? evt.which : evt.keyCode;
-        if (charCode != 46 && charCode > 31  && (charCode < 48 || charCode > 57))
-            return false;
-
-        return true;
-    });
+    
 
     // for alert message disppper after 3 sec
     $(document).ready(function(){
