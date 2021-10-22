@@ -68,21 +68,11 @@ Route::prefix('admin')->group(function(){
         Route::post('orders/status', 'Admin\AdminOrdersController@changeOrderStatus')->name('orders.status');
 
         // reports
-        Route::resource('reports', 'Admin\AdminCategoryController');
-        Route::post('reports/search', 'Admin\AdminCategoryController@search')->name('categories.search');
-        Route::post('reports/status/{category}', 'Admin\AdminCategoryController@changeStatus')->name('categories.status');
+        Route::resource('loans', 'Admin\AdminCategoryController');
+        Route::post('loans/search', 'Admin\AdminCategoryController@search')->name('loans.search');
+        Route::post('loans/status/{category}', 'Admin\AdminCategoryController@changeStatus')->name('loans.status');
 
-        // Static pages
-        Route::get('pages/terms-condition', 'Admin\AdminPagesController@termsCondition')->name('pages.terms-condition');
-        Route::get('pages/privacy-policy', 'Admin\AdminPagesController@privacyPolicy')->name('pages.privacy-policy');
-        Route::get('pages/aboutus', 'Admin\AdminPagesController@aboutus')->name('pages.aboutus');
-        Route::get('pages/return-refund-policy', 'Admin\AdminPagesController@returnRefundPolicy')->name('pages.return-refund-policy');
-        
-        Route::post('pages/terms-condition/update', 'Admin\AdminPagesController@updateTermsCondition')->name('pages.terms-condition.update');
-        Route::post('pages/privacy-policy/update', 'Admin\AdminPagesController@updatePrivacyPolicy')->name('pages.privacy-policy.update');
-        Route::post('pages/aboutus/update', 'Admin\AdminPagesController@updateAboutus')->name('pages.aboutus.update');
-        Route::post('pages/return-refund-policy/update', 'Admin\AdminPagesController@updateReturnRefundPolicy')->name('pages.returnRefundPolicy.update');
-
+       
 
     });    
 

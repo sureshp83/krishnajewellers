@@ -35,16 +35,8 @@
             <li class="{{ request()->is('admin/categories*') ? 'active' : '' }}"> <a href="{{route('categories.index')}}"><i class="zmdi zmdi-book"></i><span>Categories</span> </a> </li>
             <li class="{{ request()->is('admin/products*') ? 'active' : '' }}"> <a href="{{route('products.index')}}"><i class="zmdi zmdi-card-giftcard"></i><span>Products</span> </a> </li>
             <li class="{{ request()->is('admin/orders*') ? 'active' : '' }}"> <a href="{{route('orders.index')}}"><i class="zmdi zmdi-store"></i><span>Orders</span> </a> </li>
-            <li class="{{ request()->is('admin/reports*') ? 'active' : '' }}"> <a href="{{route('reports.index')}}"><i class="zmdi zmdi-nfc"></i><span>Reports</span> </a> </li>
-            <li class="{{ request()->is('admin/pages*') ? 'active' : '' }}"> <a href="javascript:void(0);" class="menu-toggle waves-effect waves-block"><i class="zmdi zmdi-copy"></i><span>Pages</span></a>
-                <ul class="ml-menu" style="display: none;">
-                    <li class="{{ request()->is('admin/pages/aboutus*') ? 'active' : '' }}"><a href="{{route('pages.aboutus')}}" class=" waves-effect waves-block">About us</a> </li>
-                    <li class="{{ request()->is('admin/pages/privacy-policy*') ? 'active' : '' }}"><a href="{{route('pages.privacy-policy')}}" class=" waves-effect waves-block">Privacy Policy</a> </li>
-                    <li class="{{ request()->is('admin/pages/terms-condition*') ? 'active' : '' }}"><a href="{{route('pages.terms-condition')}}" class=" waves-effect waves-block">Terms &amp; Conditions</a> </li>
-                    <li class="{{ request()->is('admin/pages/return-refund-policy*') ? 'active' : '' }}"><a href="{{route('pages.return-refund-policy')}}" class=" waves-effect waves-block">Return &amp; Refund Policy</a> </li>
-                    
-                </ul>
-            </li>
+            <li class="{{ request()->is('admin/loans*') ? 'active' : '' }}"> <a href="{{route('loans.index')}}"><i class="zmdi zmdi-nfc"></i><span>Loans</span> </a> </li>
+            
         </ul>
     </div>
     <!-- #Menu --> 
