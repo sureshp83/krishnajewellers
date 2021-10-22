@@ -55,12 +55,10 @@ Route::prefix('admin')->group(function(){
         Route::post('products/search', 'Admin\AdminProductController@search')->name('products.search');
         Route::post('products/status/{product}', 'Admin\AdminProductController@changeStatus')->name('products.status');
 
-
-        // orders
+        // categories
         Route::resource('categories', 'Admin\AdminCategoryController');
         Route::post('categories/search', 'Admin\AdminCategoryController@search')->name('categories.search');
         
-
         // orders
         Route::resource('orders', 'Admin\AdminOrdersController');
         Route::post('orders/search', 'Admin\AdminOrdersController@search')->name('orders.search');
