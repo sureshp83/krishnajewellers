@@ -138,7 +138,35 @@
                                             <input type="hidden" name="total_cost" id="total_cost" value="{{$orderDetail->total_cost ?? ''}}">
                                             <label class="custom-label font-w-bold">Total Cost : ₹ <span class="totalCost">{{$orderDetail->total_cost ?? 0}}</span></label>
                                         </div>
-                                    </div>    
+                                    </div>  
+                                    
+                                    <div class="col-lg-6 col-md-6">
+                                        <div class="form-group">
+                                            @php
+                                            switch($orderDetail->status)
+                                            {
+                                                case 'PENDING':
+                                                    $statusHtml = '<span class="label label-warning">PENDING</span>';
+                                                    break;
+                                                
+                                                case 'PAYMENT_DONE':
+                                                    $statusHtml = '<span class="label label-primary">PAYMENT DONE</span>';
+                                                    break;
+                                                    
+                                                case 'DELIVERED':
+                                                    $statusHtml = '<span class="label bg-pink">DELIVERED</span>';
+                                                    break;
+                                                
+                                                case 'CLOSED':
+                                                    $statusHtml = '<span class="label label-success">CLOSED</span>';
+                                                    break;
+                                                
+                                            }
+                                            
+                                            @endphp
+                                            <label class="custom-label font-w-bold">Order Status : <a data-orderid="{{$orderDetail->id}}" href="javascript:void(0);" class="btnChangeStatusDropdown">{!! $statusHtml !!}</a></label>
+                                        </div>
+                                    </div>  
 
                                 </div>
                                 <label class="custom-label font-w-bold">Payment Detail</label>
@@ -162,7 +190,7 @@
                                         <div class="form-group form-float">
                                             <div class="form-line focused">
                                                 <label class="custom-label">Paid Payment</label>
-                                                <input type="text" name="paid_amount" class="form-control number" id="paid_amount" value="{{$orderDetail->paid_payment ?? ''}}" {{((!empty($orderDetail) && $orderDetail->payment_type != 3) ? 'disabled' : '')}}>
+                                                <input type="text" name="paid_amount" class="form-control number" id="paid_amount" value="{{$orderDetail->paid_payment ?? ''}}" {{((!empty($orderDetail) && $orderDetail->payment_type != 3 && !empty($orderDetail->paid_payment)) ? 'disabled' : '')}}>
                                             </div>    
                                         </div>
                                     </div>
@@ -190,7 +218,7 @@
                                         </table>
                                     </div>
                                     
-                                    @if($orderDetail->status != "PAYMENT_DONE")
+                                    @if(!in_array($orderDetail->status, ["PAYMENT_DONE","CLOSED"]))
                                     <div class="col-lg-2 col-md-2">
                                         <a href="javascript:void(0);" class="btn btn-success addMorePayment" data-orderId="{{$orderDetail->id}}">Add More Payment</a>
                                     
@@ -243,10 +271,59 @@
         </div>
         @include('admin.common.footer_detail')
     </div>
+
+ 
 </section>
 
 
 @endsection
+   
+<!-- Modal -->
+<div class="modal fade" id="statusChange" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      
+    <form class="" id="orderStatusForm" method="post" action="{{route('orders.status')}}">    
+      
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Change Order Status</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body">
+          {{csrf_field()}}
+        
+        <input type="hidden" name="orderId" id="orderId" value="">
+
+        <div class="col-lg-8 col-md-8">  
+           <div class="form-group form-float">    
+            
+                <select class="form-control show-tick" id="orderStatus" name="orderStatus" >
+                    <option value="">Please select status</option>
+                    <option value="DELIVERED">DELIVERED</option>
+                    <option value="PAYMENT_DONE">PAYMENT DONE</option>
+                    <option value="CLOSED">CLOSED</option>
+                </select>
+
+                <label id="orderStatusError" class="error" for="" style="display: none;">Please select order status</label>
+            </div>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Save changes</button>
+      </div>
+
+    </form>
+
+    </div>
+  </div>
+</div>
+<!-- Modal -->
+
 <div class="modal fade " id="paymentModal" tabindex="-1" role="dialog" >
     <div class="modal-dialog" role="document">
         <div class="modal-content ">
@@ -487,14 +564,45 @@ $(document).on('focusout', '#other_charge', function(){
                 else
                 {
                     toastr.success(response.message,'Success');
+
+                    $('#paymentModal').modal('hide');
+                    setTimeout(function() {
+                        location.reload();
+                    }, 3000);
                 }
-                $('#paymentModal').modal('hide');
-                setTimeout(function() {
-                    location.reload();
-                }, 3000);
+                
                 
             }
         });
+    });
+
+
+    $(document).on('click', '.btnChangeStatusDropdown', function(){
+        
+        $('#orderStatusError').hide();
+        $('#statusChange').find('#filterOrderStatus').val($('#filter_order_status').val());
+        $('#statusChange').find('#orderId').val($(this).data('orderid'));
+        $('#statusChange').modal('show');
+
+    });
+
+    
+
+    $('#orderStatusForm').validate({
+        rules: {
+            orderStatus : {
+                required : true
+            } 
+        },
+        messages : {
+            orderStatus : {
+                required : 'Please select order status'
+            }
+        },
+        submitHandler: function (form)
+        {   
+            form.submit();
+        }   
     });
 
 </script>

@@ -89,7 +89,11 @@ class AdminOrdersController extends Controller
                 }
                 else if($order['status'] == 'DELIVERED')
                 {
-                    $status = '<span class="label label-success">DELIVERED</span>';
+                    $status = '<span class="label bg-pink">DELIVERED</span>';
+                }
+                else if($order['status'] == 'CLOSED')
+                {
+                    $status = '<span class="label label-success">CLOSED</span>';
                 }
 
                 //$status = ($order['status'] == 'PENDING') ? '<span class="label label-warning">PENDING</span>' : '<span class="label label-success">DELIVERED</span>';
@@ -275,6 +279,34 @@ class AdminOrdersController extends Controller
     }
 
     /**
+     * change order status
+     * @param Request $request
+     * 
+     * @return Response Json
+     * 
+     */
+    public function changeOrderStatus(Request $request)
+    {
+        
+        $this->validate($request, [
+            'orderStatus' => 'required',
+            'orderId' => 'required'
+        ]);
+
+        $order = Order::find($request->orderId);
+        $order->status = $request->orderStatus;
+        
+        if($order->save())
+        {
+            return redirect()->back()->with('success', trans('messages.orders.status.success'));
+           
+        }
+        
+        return redirect()->back()->with('success', trans('messages.orders.status.error'));
+
+    }
+
+    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -291,7 +323,7 @@ class AdminOrdersController extends Controller
             'weight' => 'required',
             'current_rate' => 'required'
         ]);
-
+       
         
         $order->fill($request->all());
         $order->total_cost = $request->current_rate + $request->making_charge + $request->other_charge;
@@ -312,6 +344,16 @@ class AdminOrdersController extends Controller
 
         if($order->save())
         {
+            if(!empty($request->paid_amount))
+            {
+                $orderPayment = new OrderPayment();
+                $orderPayment->order_id = $order->id;
+                $orderPayment->order_amount = $order->total_cost;
+                $orderPayment->paid_amount = $request->paid_amount;
+                $orderPayment->remain_amount = ($order->total_cost - $request->paid_amount);
+                $orderPayment->save();
+            }
+
             return redirect(route('orders.index'))->with('success', trans('messages.orders.update.success'));
         }
 
