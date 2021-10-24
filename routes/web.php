@@ -66,9 +66,9 @@ Route::prefix('admin')->group(function(){
         Route::post('orders/status', 'Admin\AdminOrdersController@changeOrderStatus')->name('orders.status');
 
         // reports
-        Route::resource('loans', 'Admin\AdminCategoryController');
-        Route::post('loans/search', 'Admin\AdminCategoryController@search')->name('loans.search');
-        Route::post('loans/status/{category}', 'Admin\AdminCategoryController@changeStatus')->name('loans.status');
+        Route::resource('loans', 'Admin\AdminLoanController');
+        Route::post('loans/search', 'Admin\AdminLoanController@search')->name('loans.search');
+        Route::post('loans/status/{loan}', 'Admin\AdminLoanController@changeStatus')->name('loans.status');
 
        
 

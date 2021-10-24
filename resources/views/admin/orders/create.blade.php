@@ -98,7 +98,7 @@
                                         <div class="form-group form-float">
                                             <div class="form-line focused">
                                                 <label class="form-label">Weight</label>
-                                                <input class="form-control number" type="text" id="weight" name="weight" value="{{$orderDetail->weight ?? ''}}" placeholder="" >
+                                                <input class="form-control decimalOnly" type="text" id="weight" name="weight" value="{{$orderDetail->weight ?? ''}}" placeholder="" >
                                             </div>
                                         </div>
                                     </div>
@@ -107,7 +107,7 @@
                                         <div class="form-group form-float">
                                             <div class="form-line focused">
                                                 <label class="form-label">Current Rate</label>
-                                                <input class="form-control number" type="text" id="current_rate" name="current_rate" value="{{$orderDetail->current_rate ?? ''}}" placeholder="" >
+                                                <input class="form-control decimalOnly" type="text" id="current_rate" name="current_rate" value="{{$orderDetail->current_rate ?? ''}}" placeholder="" >
                                             </div>
                                         </div>    
                                     </div> 
@@ -116,7 +116,7 @@
                                         <div class="form-group form-float">
                                             <div class="form-line focused">
                                                 <label class="form-label">Making Charge</label>
-                                                <input class="form-control number" type="text" id="making_charge" name="making_charge" value="{{$orderDetail->making_charge ?? ''}}" placeholder="" >
+                                                <input class="form-control decimalOnly" type="text" id="making_charge" name="making_charge" value="{{$orderDetail->making_charge ?? ''}}" placeholder="" >
                                             </div>
                                         </div>    
                                     </div> 
@@ -125,7 +125,7 @@
                                         <div class="form-group form-float">
                                             <div class="form-line focused">
                                                 <label class="form-label">Other Charge</label>
-                                                <input class="form-control number" type="text" id="other_charge" name="other_charge" value="{{$orderDetail->other_charge ?? ''}}" placeholder="" >
+                                                <input class="form-control decimalOnly" type="text" id="other_charge" name="other_charge" value="{{$orderDetail->other_charge ?? ''}}" placeholder="" >
                                             </div>
                                         </div>    
                                     </div> 
@@ -143,28 +143,35 @@
                                     <div class="col-lg-6 col-md-6">
                                         <div class="form-group">
                                             @php
-                                            switch($orderDetail->status)
+                                            if(!empty($orderDetail))
                                             {
-                                                case 'PENDING':
-                                                    $statusHtml = '<span class="label label-warning">PENDING</span>';
-                                                    break;
-                                                
-                                                case 'PAYMENT_DONE':
-                                                    $statusHtml = '<span class="label label-primary">PAYMENT DONE</span>';
-                                                    break;
+                                                switch($orderDetail->status)
+                                                {
+                                                    case 'PENDING':
+                                                        $statusHtml = '<span class="label label-warning">PENDING</span>';
+                                                        break;
                                                     
-                                                case 'DELIVERED':
-                                                    $statusHtml = '<span class="label bg-pink">DELIVERED</span>';
-                                                    break;
-                                                
-                                                case 'CLOSED':
-                                                    $statusHtml = '<span class="label label-success">CLOSED</span>';
-                                                    break;
-                                                
+                                                    case 'PAYMENT_DONE':
+                                                        $statusHtml = '<span class="label label-primary">PAYMENT DONE</span>';
+                                                        break;
+                                                        
+                                                    case 'DELIVERED':
+                                                        $statusHtml = '<span class="label bg-pink">DELIVERED</span>';
+                                                        break;
+                                                    
+                                                    case 'CLOSED':
+                                                        $statusHtml = '<span class="label label-success">CLOSED</span>';
+                                                        break;
+                                                    
+                                                }
                                             }
                                             
+                                            
                                             @endphp
-                                            <label class="custom-label font-w-bold">Order Status : <a data-orderid="{{$orderDetail->id}}" href="javascript:void(0);" class="btnChangeStatusDropdown">{!! $statusHtml !!}</a></label>
+                                            
+                                            @if(!empty($orderDetail))
+                                                <label class="custom-label font-w-bold">Order Status : <a data-orderid="{{$orderDetail->id}}" href="javascript:void(0);" class="btnChangeStatusDropdown">{!! $statusHtml !!}</a></label>
+                                            @endif
                                         </div>
                                     </div>  
 
@@ -190,7 +197,7 @@
                                         <div class="form-group form-float">
                                             <div class="form-line focused">
                                                 <label class="custom-label">Paid Payment</label>
-                                                <input type="text" name="paid_amount" class="form-control number" id="paid_amount" value="{{$orderDetail->paid_payment ?? ''}}" {{((!empty($orderDetail) && $orderDetail->payment_type != 3 && !empty($orderDetail->paid_payment)) ? 'disabled' : '')}}>
+                                                <input type="text" name="paid_amount" class="form-control decimalOnly" id="paid_amount" value="{{$orderDetail->paid_payment ?? ''}}" {{((!empty($orderDetail) && $orderDetail->payment_type != 3 && !empty($orderDetail->paid_payment)) ? 'disabled' : '')}}>
                                             </div>    
                                         </div>
                                     </div>

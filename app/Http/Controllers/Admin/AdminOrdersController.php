@@ -59,7 +59,8 @@ class AdminOrdersController extends Controller
                 ->orWhere(\DB::raw('CONCAT(customer.first_name," ",customer.last_name)'), 'like', '%'.$request->search['value'].'%')
                 ->orWhere('customer.first_name', 'like', '%'.$request->search['value'].'%')
                 ->orWhere('customer.last_name', 'like', '%'.$request->search['value'].'%')
-                ->orWhere('orders.weight', 'like', '%'.$request->search['value'].'%');
+                ->orWhere('orders.weight', 'like', '%'.$request->search['value'].'%')
+                ->orWhere('orders.unique_order_id', 'like', '%'.$request->search['value'].'%');
             });
             
           
@@ -141,7 +142,7 @@ class AdminOrdersController extends Controller
 
         $order = new Order();
         $order->fill($request->all());
-        $order->unique_order_id = '#ORD'.\Str::random(4).time();
+        $order->unique_order_id = '#ORD'.\Str::random(4).substr(time(),5);
         $order->total_cost = $request->current_rate + $request->making_charge + $request->other_charge;
         
         if($request->has('design_image'))

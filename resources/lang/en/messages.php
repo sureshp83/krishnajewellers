@@ -155,6 +155,30 @@ return [
 
     ],
 
+    'loans' => [
+        'not_found' => 'Loan not found',
+        'payment_success' => 'Your order payment added successfully',
+        'payment_already_done' => 'Order payment already done',
+        'add' => [
+            'success' => 'Loan has been created successfully',
+            'error' => 'There is some problem to create loan'
+        ],
+        'update' => [
+            'success' => 'Loan has been updated successfully',
+            'error' => 'There is some problem to update loan'
+        ],
+        'delete' => [
+            'success' => 'Loan has been deleted successfully',
+            'error' => 'There is some problem to delete loan',
+            'invalid_password' => 'Invalid password!'
+        ],
+        'status' => [
+            'success' => 'Loan has been :status successfully',
+            'error' => 'There is some problem to update status',
+        ],
+
+    ],
+
     'sliders' => [
         'not_found' => 'Slider not found',
         'add' => [
