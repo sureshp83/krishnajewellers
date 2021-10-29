@@ -127,7 +127,7 @@ class AdminLoanController extends Controller
         ]);
 
         $totalJewelleryCost = (!empty($request->goldDetail['total_cost']) ? $request->goldDetail['total_cost'] : 0) + (!empty($request->silverDetail['total_cost']) ? $request->silverDetail['total_cost'] : 0);
-
+        
         $customerLoan = new CustomerLoan();
         $customerLoan->customer_id = $request->customer_id;
         $customerLoan->total_jewellery_cost = $totalJewelleryCost;
@@ -155,7 +155,7 @@ class AdminLoanController extends Controller
             {
                 $customerLoanJew = new CustomerLoanJewellery();
                 $customerLoanJew->loan_id = $customerLoan->id;
-                $customerLoanJew->category_id = 1; // Gold
+                $customerLoanJew->category_id = 2; // Gold
                 $customerLoanJew->jewellery_name = $request->silverDetail['jewellery_name'];
                 $customerLoanJew->description = $request->silverDetail['description'];
                 $customerLoanJew->weight = $request->silverDetail['weight'];
@@ -188,9 +188,30 @@ class AdminLoanController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(CustomerLoan $loan)
     {
-        //
+        $loanDetail = $loan->load('loan_jewellary');
+        
+        $jewelleryData = [];
+        foreach($loanDetail->loan_jewellary as $key => $jewellery)
+        {
+            $jewelleryData[$jewellery->category_id] = [
+                'jewellery_name' => $jewellery->jewellery_name,
+                'description' => $jewellery->description,
+                'weight' => $jewellery->weight,
+                'current_rate' => $jewellery->current_rate,
+                'total_cost' => $jewellery->total_cost
+            ];
+        }
+
+        
+        $customers = User::selectRaw('users.id,CONCAT(users.first_name," ",users.last_name," (",IFNULL(users.village_name,""),")") as customer_name')->get();
+        $categories = Category::selectRaw('categories.id,categories.name as category_name')->get();
+
+        $count = count($jewelleryData);
+        $keyValue = key($jewelleryData);
+        
+        return view('admin.loans.create', compact('loanDetail','jewelleryData','keyValue', 'customers','categories','count'));
     }
 
     /**
@@ -200,9 +221,71 @@ class AdminLoanController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, CustomerLoan $loan)
     {
-        //
+        $this->validate($request, [
+            'customer_id' => 'required',
+            'category_id' => 'required',
+            'goldDetail' => 'required',
+            'silverDetail' => 'required',
+            'loan_amount' => 'required'
+        ]);
+        
+        if($request->category_id == 1)
+        {
+            $totalJewelleryCost = (!empty($request->category_id['total_cost']) ? $request->goldDetail['total_cost'] : 0);
+        }
+        else if($request->category_id == 1)
+        {
+            $totalJewelleryCost =(!empty($request->silverDetail['total_cost']) ? $request->silverDetail['total_cost'] : 0);
+        }
+        else
+        {
+            $totalJewelleryCost = (!empty($request->category_id['total_cost']) ? $request->goldDetail['total_cost'] : 0) + (!empty($request->silverDetail['total_cost']) ? $request->silverDetail['total_cost'] : 0);
+        }
+        
+        
+        $loan->customer_id = $request->customer_id;
+        $loan->total_jewellery_cost = $totalJewelleryCost;
+        $loan->loan_amount = $request->loan_amount;
+        $loan->interest = $request->interest;
+       
+        if($loan->save())
+        {
+            CustomerLoanJewellery::where('loan_id', $loan->id)->delete();
+
+            if(!empty($request->goldDetail) && $request->category_id == 1)
+            {
+                $customerLoanJew = new CustomerLoanJewellery();
+                $customerLoanJew->loan_id = $loan->id;
+                $customerLoanJew->category_id = 1; // Gold
+                $customerLoanJew->jewellery_name = $request->goldDetail['jewellery_name'];
+                $customerLoanJew->description = $request->goldDetail['description'];
+                $customerLoanJew->weight = $request->goldDetail['weight'];
+                $customerLoanJew->current_rate = $request->goldDetail['current_rate'];
+                $customerLoanJew->total_cost = $request->goldDetail['total_cost'];
+
+                $customerLoanJew->save();
+            }
+
+            if(!empty($request->silverDetail) && $request->category_id == 2)
+            {
+                $customerLoanJew = new CustomerLoanJewellery();
+                $customerLoanJew->loan_id = $loan->id;
+                $customerLoanJew->category_id = 1; // Gold
+                $customerLoanJew->jewellery_name = $request->silverDetail['jewellery_name'];
+                $customerLoanJew->description = $request->silverDetail['description'];
+                $customerLoanJew->weight = $request->silverDetail['weight'];
+                $customerLoanJew->current_rate = $request->silverDetail['current_rate'];
+                $customerLoanJew->total_cost = $request->silverDetail['total_cost'];
+
+                $customerLoanJew->save();
+            }
+
+            return redirect(route('loans.index'))->with('success', trans('messages.loans.update.success'));
+        }
+
+        return redirect(route('loans.index'))->with('error', trans('messages.loans.update.error'));
     }
 
     /**
@@ -211,8 +294,15 @@ class AdminLoanController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(CustomerLoan $loan)
     {
-        //
+        CustomerLoanJewellery::where('loan_id', $loan->id)->delete();
+
+        if($loan->delete())
+        {
+            return redirect(route('loans.index'))->with('success', trans('messages.loans.delete.success'));
+        }
+
+        return redirect(route('loans.index'))->with('error', trans('messages.loans.delete.error'));
     }
 }

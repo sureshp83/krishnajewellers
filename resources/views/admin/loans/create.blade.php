@@ -56,9 +56,9 @@
                                             <div class="form-group form-float">
                                                 <label class="custom-label">Category</label>
                                                 <select name="category_id" id="category_id" class="select2">
-                                                    <option value="BOTH">Gold & Silver</option>
+                                                    <option value="BOTH" {{ ((!empty($loanDetail) && $count == 2 ) ? 'selected' : '')}}>Gold & Silver</option>
                                                     @forelse($categories as $category)
-                                                    <option value="{{$category->id}}" {{(!empty($loanDetail) && $loanDetail->category_id == $category->id) ? 'selected' : '' }}>{{$category->category_name}}</option>
+                                                    <option value="{{$category->id}}" {{ ((!empty($loanDetail) && $count == 1) && (isset($keyValue) && $keyValue == $category->id)) ? 'selected' : '' }}>{{$category->category_name}}</option>
                                                     @empty
                                                     <option value="">Not found</option>
                                                     @endforelse
@@ -71,7 +71,7 @@
                             </div>
                         </div>                
                     </div>
-
+                    
                     <div class="goldDetail row clearfix">
                         <div class="col-12">
                             <div class="card">
@@ -83,7 +83,7 @@
                                             <div class="form-group form-float">
                                                 <div class="form-line focused">
                                                     <label class="form-label">Jewellery Name</label>
-                                                    <input type="text" class="form-control" name="goldDetail[jewellery_name]" id="jewellery_name_gold" required="" value="{{$loanDetail->jewellery_name ?? ''}}">
+                                                    <input type="text" class="form-control" name="goldDetail[jewellery_name]" id="jewellery_name_gold" required="" value="{{$jewelleryData[1]['jewellery_name'] ?? ''}}">
                                                 </div>
                                             </div>
                                         </div>
@@ -91,7 +91,7 @@
                                             <div class="form-group form-float">
                                                 <div class="form-line focused">
                                                     <label class="form-label">Description</label>
-                                                    <textarea rows="10" cols="10" name="goldDetail[description]" id="description_gold" required="" class="form-control no-resize auto-growth">{{$loanDetail->description ?? ''}}</textarea>
+                                                    <textarea rows="10" cols="10" name="goldDetail[description]" id="description_gold" required="" class="form-control no-resize auto-growth">{{$jewelleryData[1]['description'] ?? ''}}</textarea>
 
                                                 </div>
                                             </div>
@@ -105,7 +105,7 @@
                                             <div class="form-group form-float">
                                                 <div class="form-line focused">
                                                     <label class="form-label">Weight</label>
-                                                    <input class="form-control decimalOnly" type="text" id="weight_gold" name="goldDetail[weight]" required="" value="{{$loanDetail->weight ?? ''}}" placeholder="">
+                                                    <input class="form-control decimalOnly" type="text" id="weight_gold" name="goldDetail[weight]" required="" value="{{$jewelleryData[1]['weight'] ?? ''}}" placeholder="">
                                                 </div>
                                             </div>
                                         </div>
@@ -114,7 +114,7 @@
                                             <div class="form-group form-float">
                                                 <div class="form-line focused">
                                                     <label class="form-label">Current Rate</label>
-                                                    <input class="form-control decimalOnly" type="text" id="current_rate_gold" name="goldDetail[current_rate]" required="" value="{{$loanDetail->current_rate ?? ''}}" placeholder="">
+                                                    <input class="form-control decimalOnly" type="text" id="current_rate_gold" name="goldDetail[current_rate]" required="" value="{{$jewelleryData[1]['current_rate'] ?? ''}}" placeholder="">
                                                 </div>
                                             </div>
                                         </div>
@@ -123,7 +123,7 @@
                                             <div class="form-group form-float">
                                                 <div class="form-line focused">
                                                     <label class="form-label">Applicable Amount</label>
-                                                    <input class="form-control decimalOnly" type="text" id="total_cost_gold" name="goldDetail[total_cost]" required="" value="{{$loanDetail->current_rate ?? ''}}" placeholder="">
+                                                    <input class="form-control decimalOnly" type="text" id="total_cost_gold" name="goldDetail[total_cost]" required="" value="{{$jewelleryData[1]['total_cost'] ?? ''}}" placeholder="">
                                                 </div>
                                             </div>
                                         </div>
@@ -146,7 +146,7 @@
                                             <div class="form-group form-float">
                                                 <div class="form-line focused">
                                                     <label class="form-label">Jewellery Name</label>
-                                                    <input type="text" class="form-control" name="silverDetail[jewellery_name]" id="jewellery_name_silver" required="" value="{{$loanDetail->jewellery_name ?? ''}}">
+                                                    <input type="text" class="form-control" name="silverDetail[jewellery_name]" id="jewellery_name_silver" required="" value="{{$jewelleryData[2]['jewellery_name'] ?? ''}}">
                                                 </div>
                                             </div>
                                         </div>
@@ -154,7 +154,7 @@
                                             <div class="form-group form-float">
                                                 <div class="form-line focused">
                                                     <label class="form-label">Description</label>
-                                                    <textarea rows="10" cols="10" class="form-control no-resize auto-growth" required="" id="description_silver" name="silverDetail[description]">{{$loanDetail->description ?? ''}}</textarea>
+                                                    <textarea rows="10" cols="10" class="form-control no-resize auto-growth" required="" id="description_silver" name="silverDetail[description]">{{$jewelleryData[2]['description'] ?? ''}}</textarea>
 
                                                 </div>
                                             </div>
@@ -162,15 +162,13 @@
 
                                     </div>
 
-
-
                                     <div class="row">
 
                                         <div class="col-lg-3 col-md-3">
                                             <div class="form-group form-float">
                                                 <div class="form-line focused">
                                                     <label class="form-label">Weight</label>
-                                                    <input class="form-control decimalOnly" type="text" id="weight_silver" name="silverDetail[weight]" required="" value="{{$loanDetail->weight ?? ''}}" placeholder="">
+                                                    <input class="form-control decimalOnly" type="text" id="weight_silver" name="silverDetail[weight]" required="" value="{{$jewelleryData[2]['weight'] ?? ''}}" placeholder="">
                                                 </div>
                                             </div>
                                         </div>
@@ -179,7 +177,7 @@
                                             <div class="form-group form-float">
                                                 <div class="form-line focused">
                                                     <label class="form-label">Current Rate</label>
-                                                    <input class="form-control decimalOnly" type="text" id="current_rate_silver" required="" name="silverDetail[current_rate]" value="{{$loanDetail->current_rate ?? ''}}" placeholder="">
+                                                    <input class="form-control decimalOnly" type="text" id="current_rate_silver" required="" name="silverDetail[current_rate]" value="{{$jewelleryData[2]['current_rate'] ?? ''}}" placeholder="">
                                                 </div>
                                             </div>
                                         </div>
@@ -188,7 +186,7 @@
                                             <div class="form-group form-float">
                                                 <div class="form-line focused">
                                                     <label class="form-label">Applicable Amount</label>
-                                                    <input class="form-control decimalOnly" type="text" id="total_cost_silver" required="" name="silverDetail[total_cost]" value="{{$loanDetail->total_cost ?? ''}}" placeholder="">
+                                                    <input class="form-control decimalOnly" type="text" id="total_cost_silver" required="" name="silverDetail[total_cost]" value="{{$jewelleryData[2]['total_cost'] ?? ''}}" placeholder="">
                                                 </div>
                                             </div>
                                         </div>
@@ -207,7 +205,7 @@
                                         <div class="col-lg-6 col-md-6">
                                             <div class="form-group">
                                                 
-                                                <label class="custom-label font-w-bold">Total Applicable Amount : ₹ <span class="totalCost">{{$loanDetail->total_cost ?? 0}}</span></label>
+                                                <label class="custom-label font-w-bold">Total Applicable Amount : ₹ <span class="totalCost">{{$loanDetail->total_jewellery_cost ?? 0}}</span></label>
                                             </div>
                                         </div>
 
@@ -397,9 +395,24 @@
             $('.goldDetail').hide();
             $('.silverDetail').show();
         }
+
+        // // empty all data
+        // $('.goldDetail').find('#jewellery_name_gold').val('');
+        // $('.goldDetail').find('#description_gold').val('');
+        // $('.goldDetail').find('#weight_gold').val('');
+        // $('.goldDetail').find('#current_rate_gold').val('');
+        // $('.goldDetail').find('#total_cost_gold').val('');
+
+        // $('.silverDetail').find('#jewellery_name_silver').val('');
+        // $('.silverDetail').find('#description_silver').val('');
+        // $('.silverDetail').find('#weight_silver').val('');
+        // $('.silverDetail').find('#current_rate_silver').val('');
+        // $('.silverDetail').find('#total_cost_silver').val('');
     });
 
-    
+    @if(!empty($loanDetail))
+        $('#category_id').trigger('change');
+    @endif
 
     $(".form").validate({
         // debug:true,
