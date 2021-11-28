@@ -173,3 +173,10 @@ a {
     font-weight: 700 !important;
     font-size: 18px !important;
 }
+.qr_code_print{
+    margin-left: 75px !important;
+}
+
+.f-w-bold{
+    font-weight: bold;
+}

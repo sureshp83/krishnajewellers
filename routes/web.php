@@ -51,10 +51,12 @@ Route::prefix('admin')->group(function(){
         Route::post('customers/status/{customer}', 'Admin\AdminCustomersController@changeStatus')->name('customers.status');
 
         // Products
+        Route::get('products/print-qr-code','Admin\AdminProductController@getPrintOutPage')->name('print-qr-code');
         Route::resource('products', 'Admin\AdminProductController');
         Route::post('products/search', 'Admin\AdminProductController@search')->name('products.search');
         Route::post('products/status/{product}', 'Admin\AdminProductController@changeStatus')->name('products.status');
-
+        
+        
         // categories
         Route::resource('categories', 'Admin\AdminCategoryController');
         Route::post('categories/search', 'Admin\AdminCategoryController@search')->name('categories.search');

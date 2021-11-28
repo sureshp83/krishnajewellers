@@ -25,12 +25,15 @@
                     <div class="col-lg-12 col-md-12 col-sm-12">
                         <div class="card">
                             <div class="body">
+                                
                                 @include('admin.common.flash')
                                 <div class="table-responsive">
+                                <a href="{{route('print-qr-code')}}" name="print_qrcode" class="btn btn-primary">Print QR Code</a>
                                 <table id= "products" class="table table-bordered table-striped table-hover dataTable js-exportable">
                                     <thead>
                                     <tr>
                                         <th>#</th>
+                                       
                                         <th>QR Code</th>
                                         <th>Product Name</th>
                                         <th>Category</th>
@@ -44,6 +47,7 @@
                                     <tfoot>
                                     <tr>
                                     <th>#</th>
+                                    
                                     <th>QR Code</th>
                                     <th>Product Name</th>
                                     <th>Category</th>
@@ -98,7 +102,6 @@
                 'async' : false
             },
             columns : [
-                
                 {data : 'id', name : 'id', orderable : false,visible:false },
                 {data : 'qr_code_image', name : 'qr_code_image', orderable : false },
                 {data : 'product_name', name : 'product_name'},
@@ -106,12 +109,11 @@
                 {data : 'status', name : 'is_active'},
                 {data : 'action', name : 'action', orderable: false}
             ],
-
+            
             "aaSorting": [[0,'desc']],
         });
     });
 
-    
 
 </script>
 

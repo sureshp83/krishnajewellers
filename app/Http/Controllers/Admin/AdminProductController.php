@@ -80,6 +80,7 @@ class AdminProductController extends Controller
                 
                 $status = ($product['is_active'] == 1) ? '<span class="label label-success">Active</span>' : '<span class="label label-danger">Inactive</span>';
                 
+                
                 $products['data'][$key]['qr_code_image'] = '<img src="'.$product['qr_code_image'].'" class="rounded-circle" width="40" height="40">';
                 $products['data'][$key]['status'] = '<a href="javascript:void(0);" data-url="' . $statusRoute . '" class="btnChangeStatus">'. $status.'</a>';
                 $products['data'][$key]['action'] ='<a href="' . $viewRoute . '" class="btn btn-raised waves-effect waves-float waves-light-blue m-l-5" title="View product"><i class="zmdi zmdi-eye"></i></a>&nbsp&nbsp';
@@ -167,6 +168,15 @@ class AdminProductController extends Controller
         return view('admin.products.view', compact('productDetail'));
     }
     
+    public function getPrintOutPage()
+    {
+        $qrCodePath = url(config('constant.QR_CODE_PATH'));
+
+        $qrCodes = Product::selectRaw('product_id,CONCAT("'.$qrCodePath.'","/",IFNULL(qr_code_image,"default-user.png")) as qr_code_image')
+        ->get();
+        
+        return view('admin.products.printout', compact('qrCodes'));
+    }
 
     /**
      * Change user status
