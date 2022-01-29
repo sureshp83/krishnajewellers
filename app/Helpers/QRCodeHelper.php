@@ -26,8 +26,6 @@ class QRCodeHelper
         
         // Example QR CODE
         
-        //$isSuccess = QRCodeHelper::generateQrCode('{"table_id":77789897221}', public_path('images/qr1.png'));
-        //dd($isSuccess);
         
         $json = urlencode($json);
         
@@ -36,6 +34,7 @@ class QRCodeHelper
         try {
             
             $client = new \GuzzleHttp\Client();
+            
             $response = $client->request('GET', $url);
             
 
@@ -46,36 +45,38 @@ class QRCodeHelper
                     unlink($fileNameWithPath);
                 }
             }
-
+            
             $fp = fopen($fileNameWithPath, 'x');
             fwrite($fp, $response->getBody());
             fclose($fp);
             
-           // dd($fileNameWithPath);
-             //Set the Content Type
-             header('Content-type: image/jpeg');
+        //    // dd($fileNameWithPath);
+        //      //Set the Content Type
+        //      header('Content-type: image/jpeg');
            
-             // Create Image From Existing File
-             $jpg_image = imagecreatefromjpeg($fileNameWithPath);
+        //      // Create Image From Existing File
+        //      $jpg_image = imagecreatefromjpeg($fileNameWithPath);
              
-             // Allocate A Color For The Text
-             $white = imagecolorallocate($jpg_image, 255, 255, 255);
+        //      // Allocate A Color For The Text
+        //      $white = imagecolorallocate($jpg_image, 255, 255, 255);
  
-             // Set Path to Font File
-             $font_path = 'font.TTF';
+        //      // Set Path to Font File
+        //      $font_path = 'font.TTF';
  
-             // Set Text to Be Printed On Image
-             $text = "This is a sunset!";
+        //      // Set Text to Be Printed On Image
+        //      $text = "This is a sunset!";
  
-             // Print Text On Image
-             imagettftext($jpg_image, 25, 0, 75, 300, $white, $font_path, $text);
+        //      // Print Text On Image
+        //      imagettftext($jpg_image, 25, 0, 75, 300, $white, $font_path, $text);
              
-             // Send Image to Browser
-             imagejpeg($jpg_image);
+        //      // Send Image to Browser
+        //      imagejpeg($jpg_image);
             
-             $fp = fopen($jpg_image, 'x');
-            fwrite($fp, $response->getBody());
-            fclose($fp);
+        //      $fp = fopen($jpg_image, 'rb');
+        //     \Log::debug($fp);
+        //     \Log::debug($response->getBody());
+        //     fwrite($fp, $response->getBody());
+        //     fclose($fp);
              //
              // Clear Memory
              //imagedestroy($jpg_image);
@@ -87,6 +88,7 @@ class QRCodeHelper
         }
         catch (\Exception $e)
         {
+            dd($e->getMessage());
            return [
                'status' => 0
            ];

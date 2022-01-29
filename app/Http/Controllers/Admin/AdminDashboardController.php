@@ -3,7 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-
+use App\Model\CustomerLoan;
+use App\Model\Order;
 use App\Model\Product;
 use App\Model\User;
 use Illuminate\Http\Request;
@@ -33,10 +34,16 @@ class AdminDashboardController extends Controller
         
         
         $totalCustomer = User::count();
+        $totalProduct = Product::count();
+        $totalOrder = Order::count();
+        $totalLoan = CustomerLoan::count();
         
         
         return view('admin.dashboard',[
-            'totalCustomer' => $totalCustomer
+            'totalCustomer' => $totalCustomer,
+            'totalProduct' => $totalProduct,
+            'totalOrder' => $totalOrder,
+            'totalLoan' => $totalLoan
         ]);
     }
 }

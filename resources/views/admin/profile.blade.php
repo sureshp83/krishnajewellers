@@ -42,19 +42,22 @@
                     <div class="row clearfix">
                         <div class="col-sm-12">
                             
-                            <div class="form-group">
-                                <div class="form-line">
-                                    <input type="password" name="current_password" id="current_password" class="form-control" placeholder="Current Password">
+                            <div class="form-group form-float">
+                                <div class="form-line focused">
+                                <label class="form-label">Current Password</label>
+                                    <input type="password" name="current_password" id="current_password" class="form-control" >
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <div class="form-line">
-                                    <input type="password" name="new_password" id="new_password" class="form-control" placeholder="New Password">
+                            <div class="form-group form-float">
+                                <div class="form-line focused">
+                                <label class="form-label">New Password</label>
+                                    <input type="password" name="new_password" id="new_password" class="form-control" >
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <div class="form-line">
-                                    <input type="password" name="confirm_password" id="confirm_password" class="form-control" placeholder="Confirm Password">
+                            <div class="form-group form-float">
+                                <div class="form-line focused">
+                                <label class="form-label">Confirm Password</label>
+                                    <input type="password" name="confirm_password" id="confirm_password" class="form-control" >
                                 </div>
                             </div>
                             <input type="submit" class="btn btn-raised btn-primary cursor-pointer" value="Save Changes">
@@ -69,31 +72,35 @@
                     <input type="hidden" name="userInfoId" id="userInfoId" value="{{$admin->id}}">
                 <div class="row clearfix">
                     <div class="col-lg-6 col-md-12">
-                        <div class="form-group">
-                            <div class="form-line">
-                                <input type="text" name="first_name" id="first_name" value="{{$admin->first_name}}" class="form-control" placeholder="First Name">
+                        <div class="form-group form-float">
+                            <div class="form-line focused">
+                                <label class="form-label">First Name</label>
+                                <input type="text" name="first_name" id="first_name" value="{{$admin->first_name}}" class="form-control" >
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-12">
-                        <div class="form-group">
-                            <div class="form-line">
-                                <input type="text" name="last_name" id="last_name" value="{{$admin->last_name}}" class="form-control" placeholder="Last Name">
+                        <div class="form-group form-float">
+                            <div class="form-line focused">
+                            <label class="form-label">Last Name</label>
+                                <input type="text" name="last_name" id="last_name" value="{{$admin->last_name}}" class="form-control" >
                             </div>
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-12">
-                        <div class="form-group">
-                            <div class="form-line">
-                                <input type="email" name="email" id="email" value="{{$admin->email}}" class="form-control" placeholder="Email Address">
+                        <div class="form-group form-float">
+                            <div class="form-line focused">
+                            <label class="form-label">Email Address</label>
+                                <input type="email" name="email" id="email" value="{{$admin->email}}" class="form-control">
                             </div>
                         </div>
                     </div>
                     
                     <div class="col-lg-4 col-md-12">
-                        <div class="form-group">
-                            <div class="form-line">
-                                <input type="text" name="phone_number" value="{{$admin->phone_number}}" id="phone_number" class="form-control" placeholder="Phone Number">
+                        <div class="form-group form-float">
+                            <div class="form-line focused">
+                                <label class="form-label">Phone Number</label>
+                                <input type="text" name="phone_number" value="{{$admin->phone_number}}" id="phone_number" class="form-control" >
                             </div>
                         </div>
                     </div>

@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Model\Category;
-use App\Models\CustomerProductWishlist;
 use App\Model\Product;
 use App\Model\ProductAttribute;
 use App\Model\ProductImage;
@@ -49,7 +48,7 @@ class AdminProductController extends Controller
 
             $qrCodePath = url(config('constant.QR_CODE_PATH'));
             
-            $query = Product::selectRaw('products.id,products.is_active,
+            $query = Product::selectRaw('products.id,products.is_active,products.product_id,
             CONCAT("'.$qrCodePath.'","/",IFNULL(qr_code_image,"default-user.png")) as qr_code_image,
             products.product_name,categories.name as category')
             ->leftJoin('categories', 'categories.id', 'products.category_id');
@@ -121,25 +120,27 @@ class AdminProductController extends Controller
         ]); 
 
         \DB::begintransaction();
-
+        // $isSuccess = QRCodeHelper::generateQrCode('{"table_id":77789897221}', public_path('admin-assets/images/qr_code_image/qr1.png'));
+        // dd($isSuccess);
+        
         $product = new Product();
         $product->fill($request->all());
         
         if($product->save())
         {
-            $product->product_id = '#'.$product->id.time().\Str::random(4);
+            $product->product_id = $product->id.time().\Str::random(4);
             $product->save();
 
-            $encrypted = base64_encode($product->id);
+            $encrypted = base64_encode($product->product_id);
 
-            $qrCodePath = url(config('constant.QR_CODE_PATH'));
+            $qrCodePath = public_path(config('constant.QR_CODE_PATH'));
             
-            $fullPath = $qrCodePath.'/qr_prod_'.$product->id.'_tab.jpg';
-            
+            $fullPath = $qrCodePath.'/qr_prod_'.$product->product_id.'_tab.jpg';
+           
             $qrCode = QRCodeHelper::generateQrCode( $encrypted, $fullPath);
-            dd($qrCode);
+            
             $product->qr_code = $qrCode;
-            $product->qr_code_image = 'qr_prod_'.$product->id.'_tab.jpg';
+            $product->qr_code_image = 'qr_prod_'.$product->product_id.'_tab.jpg';
             $product->save();
 
             \DB::commit();

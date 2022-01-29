@@ -35,6 +35,7 @@
                                         <th>#</th>
                                        
                                         <th>QR Code</th>
+                                        <th>Product ID</th>
                                         <th>Product Name</th>
                                         <th>Category</th>
                                         <th>Status</th>
@@ -49,6 +50,7 @@
                                     <th>#</th>
                                     
                                     <th>QR Code</th>
+                                    <th>Product ID</th>
                                     <th>Product Name</th>
                                     <th>Category</th>
                                     <th>Status</th>
@@ -104,6 +106,7 @@
             columns : [
                 {data : 'id', name : 'id', orderable : false,visible:false },
                 {data : 'qr_code_image', name : 'qr_code_image', orderable : false },
+                {data : 'product_id', name : 'product_id', orderable : true },
                 {data : 'product_name', name : 'product_name'},
                 {data : 'category', name : 'category'},
                 {data : 'status', name : 'is_active'},

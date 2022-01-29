@@ -91,12 +91,15 @@
                                                             <th>Date</th>
                                                             <th>Credit Amount</th>
                                                             <th>Debit Amount</th>
+                                                            <th>View Order Detail</th>
                                                         </thead>
                                                         <tbody>
                                                             <tr>
                                                                 <td>{{$customerOrder->created_at}}</td>
                                                                 <td>{{$customerOrder->total_cost}}</td>
                                                                 <td>{{$customerOrder->total_cost}}</td>
+                                                                <td><a href="{{route('orders.show',[$customerOrder->id])}}" class="btn btn-raised waves-effect waves-float waves-light-blue m-l-5" title="View order detail"><i class="zmdi zmdi-eye"></i></a></td>
+                                                                    
                                                             </tr>    
                                                         </tbody>        
                                                     </table>    
