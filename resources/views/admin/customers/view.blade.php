@@ -19,6 +19,7 @@
         <div class="container-fluid">
             <div class="row clearfix">
                 <div class="col-lg-12">
+                <a href="{{route('customers.index')}}" class="btn btn-primary m-t-20 float-right">Back</a>
                     <!-- View -->
                         <div class="row clearfix">
                             <div class="col-lg-6 col-md-12">

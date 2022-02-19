@@ -23,7 +23,7 @@
                     <div class="form-group form-float">
                             <div class="form-line">
                                 <input type="email" class="form-control" name="email" id="email">
-                                <label class="form-label">Email</label>
+                                <!-- <label class="form-label">Email</label> -->
                             </div>
                         </div>
                

@@ -137,6 +137,7 @@ class AdminOrdersController extends Controller
             'jewellery_name' => 'required',
             'description' => 'nullable',
             'weight' => 'required',
+            'weight_type' => 'required',
             'current_rate' => 'required'
         ]);
 

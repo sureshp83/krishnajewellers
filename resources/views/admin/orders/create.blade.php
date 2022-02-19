@@ -103,6 +103,21 @@
                                         </div>
                                     </div>
 
+                                    <div class="col-lg-4 col-md-4">
+                                        <div class="form-group form-float">
+                                            <label class="custom-label">Weight Type</label>
+                                            <select name="weight_type" id="weight_type" class="select2">
+                                                
+                                                <option value="MILIGRAM" {{(!empty($orderDetail) && $orderDetail->weight_type == "MILIGRAM") ? 'selected' : '' }}>MILIGRAM</option>
+                                                <option value="GRAM" {{(!empty($orderDetail) && $orderDetail->weight_type == "GRAM") ? 'selected' : '' }}>GRAM</option>
+                                                <option value="KG" {{(!empty($orderDetail) && $orderDetail->weight_type == "KG") ? 'selected' : '' }}>KG</option>
+                                                
+                                               
+                                            </select>
+                                            <label id="category_id-error" class="error" for="category_id"></label>
+                                        </div>
+                                    </div>
+
                                     <div class="col-lg-3 col-md-3">
                                         <div class="form-group form-float">
                                             <div class="form-line focused">
@@ -112,6 +127,8 @@
                                         </div>    
                                     </div> 
                                     
+                                    <input class="form-control " type="hidden" id="calculate_value" name="calculate_value" value=""  >
+
                                     <div class="col-lg-3 col-md-3">
                                         <div class="form-group form-float">
                                             <div class="form-line focused">
@@ -263,7 +280,7 @@
 
                                             <button type="submit" class="btn btn-raised bg-app waves-effect m-t-20">Submit</button>
                                             <button type="reset" class="btn btn-raised btn-default waves-effect m-t-20">Cancel</button>
-
+                                            <a href="{{route('orders.index')}}" class="btn btn-primary m-t-20 float-right">Back</a>
                                         </div>
                                     </div>
                                 </div>
@@ -391,6 +408,15 @@ $("#category_id").select2({width: '100%'}).on("change", function(e) {
     }
 });
 
+$("#weight_type").select2({width: '65%'}).on("change", function(e) {
+    if(e.val)
+    {
+        $("#weight_type option[value='"+e.val+"']").attr("selected","selected");
+    }
+});
+
+
+
 $(document).on('change', '#payment_type', function(){
 
     $('.paid_payment').show();
@@ -401,11 +427,67 @@ $(document).on('change', '#payment_type', function(){
     }
 });
 
+var selectedCategotry = "";
+
+$(document).on('change', '#category_id', function(){
+
+     selectedCategotry = $('#category_id').val();
+});
+
+
 $(document).on('keyup', '#current_rate', function(){
    
-    var total = parseFloat($(this).val()) + parseFloat(($('#making_charge').val() != "") ? $('#making_charge').val() : 0)
-     + parseFloat(($('#other_charge').val() != "") ? $('#other_charge').val() : 0);
     
+    
+    // check category vise 
+    if(selectedCategotry == "1")
+    {
+        var selectedWeightType = $('#weight_type').val();
+        if(selectedWeightType == "MILIGRAM")
+        {
+            var divide = (parseFloat($('#weight').val()/100));
+        }
+        else if(selectedWeightType == "GRAM")
+        {
+            var divide = (parseFloat($('#weight').val()/1));    
+        }
+        else
+        {
+            var divide = (parseFloat($('#weight').val()*100));
+        }
+        
+        var perUnitPrice = (parseFloat($('#current_rate').val()/10));
+        
+        var fnewTotal = (divide * perUnitPrice);
+        
+    }
+    else
+    {
+        var selectedWeightType = $('#weight_type').val();
+        if(selectedWeightType == "MILIGRAM")
+        {
+            var divide = (parseFloat($('#weight').val() / 1000));
+        }
+        else if(selectedWeightType == "GRAM")
+        {
+            var divide = (parseFloat($('#weight').val()/10));    
+        }
+        else
+        {
+            var divide = (parseFloat($('#weight').val()*10));
+        }
+        
+        var perUnitPrice = (parseFloat($('#current_rate').val()/10));
+        
+        var fnewTotal = (divide * perUnitPrice);
+        
+    }
+    
+    $('#calculate_value').val(fnewTotal);
+
+    var total = fnewTotal + parseFloat(($('#making_charge').val() != "") ? $('#making_charge').val() : 0)
+     + parseFloat(($('#other_charge').val() != "") ? $('#other_charge').val() : 0);
+
     $('.totalCost').text((isNaN(total)) ? 0 : total);
 });
 
@@ -416,7 +498,7 @@ $(document).on('focusout', '#current_rate', function(){
 $(document).on('keyup', '#making_charge', function(){
     if($(this).val() != "")
     {
-        var total = parseFloat($(this).val()) + parseFloat(($('#current_rate').val() != "") ? $('#current_rate').val() : 0)
+        var total = parseFloat($(this).val()) + parseFloat(($('#calculate_value').val() != "") ? $('#calculate_value').val() : 0)
             + parseFloat(($('#other_charge').val() != "") ? $('#other_charge').val() : 0);
         $('.totalCost').text((isNaN(total)) ? 0 : total);
     }
@@ -429,7 +511,7 @@ $(document).on('focusout', '#making_charge', function(){
 $(document).on('keyup', '#other_charge', function(){
     if($(this).val() != "")
     {
-        var total = parseFloat($(this).val()) + parseFloat(($('#current_rate').val() != "") ? $('#current_rate').val() : 0)
+        var total = parseFloat($(this).val()) + parseFloat(($('#calculate_value').val() != "") ? $('#calculate_value').val() : 0)
             + parseFloat(($('#making_charge').val() != "") ? $('#making_charge').val() : 0);
         $('.totalCost').text((isNaN(total)) ? 0 : total);
     }

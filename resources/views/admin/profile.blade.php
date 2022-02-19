@@ -9,26 +9,30 @@
 @endsection
 
 @section('content')
-<section class="content home">
+<section class="content ">
+<div class="block-header">
+    <div class="row">
+        <div class="col-lg-7 col-md-6 col-sm-12">
+            <h2>Edit Profile
+            </h2>
+        </div>
+        <div class="col-lg-5 col-md-6 col-sm-12">
+            <ul class="breadcrumb float-md-right">
+                <li class="breadcrumb-item"><a href="{{ route('adminDashboard') }}"><i class="zmdi zmdi-home"></i> Home</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
 <div class="container-fluid">
     <div class="row clearfix">
         <div class="col-lg-12 col-md-12 col-sm-12">
-            <div class="card">
-                <div class="header">
-                    <h2> Edit Profile </h2>
-                </div>
+            
+               
                 @include('admin.common.flash')
-                <div class="col-md-12 align-self-center text-right">
-                    <div class="d-flex justify-content-end align-items-center">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item">
-                                <a href="{{ route('adminDashboard') }}"><i class="zmdi zmdi-home"></i> Home</a>
-                            </li>
-                            <li class="breadcrumb-item active">Edit Profile</li>
-                        </ol>
-                       
-                    </div>
-                </div>    
+                  
+            
+            <div class="card">    
                 <div class="body"> 
                     
         <!-- Tab panes -->

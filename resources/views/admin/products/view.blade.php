@@ -32,6 +32,10 @@
                         <div class="row">
 
                             <div class="col-lg-12">
+                            
+                                <a href="{{route('products.edit',['product' => $productDetail->id])}}" class="btn btn-primary m-t-20 float-right" >Edit</a>
+                                <a href="{{route('products.index')}}" class="btn btn-primary m-t-20 float-right">Back</a>
+
                                 <div class="card">
                                     <!-- View -->
                                     <div class="body">

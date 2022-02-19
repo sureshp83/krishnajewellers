@@ -28,7 +28,7 @@
                         <div class="form-line">
                             <input class="form-control" type="email"  id="email" name="email" placeholder="" tabindex="1" required data-validation-required-message= "Please enter your email">    
                         
-                            <label class="form-label">Email</label>
+                            <!-- <label class="form-label">Email</label> -->
                         </div>
                     </div>
 

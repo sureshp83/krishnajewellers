@@ -151,7 +151,7 @@
 
                                             <button type="submit" class="btn btn-raised bg-app waves-effect m-t-20">Submit</button>
                                             <button type="reset" class="btn btn-raised btn-default waves-effect m-t-20">Cancel</button>
-
+                                            <a href="{{route('customers.index')}}" class="btn btn-primary m-t-20 float-right">Back</a>
                                         </div>
                                     </div>
                                 </div>

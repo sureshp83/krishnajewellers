@@ -22,8 +22,9 @@
         <div class="row clearfix">
             <div class="col-12">
                 <div class="card">
+                
                     <div class="body">
-
+                    <a href="{{route('orders.index')}}" class="btn btn-primary m-t-20 float-right">Back</a>
                         <div class="row">
                             <div class="col-lg-6 col-md-6">
                                 <div class="form-group form-float">
@@ -73,7 +74,7 @@
                         <div class="row">
                             <div class="col-lg-3 col-md-3">
                                 <div class="form-group form-float">
-                                    <label class="form-label">Weight : {{$orderDetail->weight}}</label>
+                                    <label class="form-label">Weight : {{$orderDetail->weight}} - {{$orderDetail->weight_type}}</label>
                                 </div>
                             </div>
 

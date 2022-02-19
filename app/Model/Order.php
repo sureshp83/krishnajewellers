@@ -16,6 +16,7 @@ class Order extends Model
         'jewellery_name',
         'description',
         'weight',
+        'weight_type',
         'current_rate',
         'making_charge',
         'other_charge',

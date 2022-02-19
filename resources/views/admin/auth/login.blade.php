@@ -25,13 +25,13 @@
                         <div class="form-line">
                         <input class="form-control" type="email"  id="email" name="email" placeholder="" tabindex="1" required data-validation-required-message= "Please enter your email">    
                         
-                            <label class="form-label">Email</label>
+                            <!-- <label class="form-label">Email</label> -->
                         </div>
                     </div>
                     <div class="form-group form-float">
                         <div class="form-line">
                         <input class="form-control" type="password" name="password" id="password" placeholder="" tabindex="2" required data-validation-required-message= "Please enter your password"> 
-                            <label class="form-label">Password</label>
+                            <!-- <label class="form-label">Password</label> -->
                         </div>
                     </div>
                     <div>

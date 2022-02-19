@@ -86,8 +86,8 @@ class AdminLoanController extends Controller
                 //$status = ($order['status'] == 'PENDING') ? '<span class="label label-warning">PENDING</span>' : '<span class="label label-success">DELIVERED</span>';
                 
                 $loans['data'][$key]['status'] = $status;
-                $loans['data'][$key]['action'] ='<a href="' . $viewRoute . '" class="btn btn-raised waves-effect waves-float waves-light-blue m-l-5" title="View loan detail"><i class="zmdi zmdi-eye"></i></a>&nbsp&nbsp';
-                $loans['data'][$key]['action'] .='<a href="' . $editRoute . '" class="btn btn-raised waves-effect waves-float waves-light-blue m-l-5" title="Edit loan detail"><i class="zmdi zmdi-edit"></i></a>&nbsp&nbsp';
+                //$loans['data'][$key]['action'] ='<a href="' . $viewRoute . '" class="btn btn-raised waves-effect waves-float waves-light-blue m-l-5" title="View loan detail"><i class="zmdi zmdi-eye"></i></a>&nbsp&nbsp';
+                $loans['data'][$key]['action'] ='<a href="' . $editRoute . '" class="btn btn-raised waves-effect waves-float waves-light-blue m-l-5" title="Edit loan detail"><i class="zmdi zmdi-edit"></i></a>&nbsp&nbsp';
                 $loans['data'][$key]['action'] .= '<a href="javascript:void(0);" data-url="'.$deleteRoute.'" class="btn btn-raised waves-effect waves-float waves-light-blue m-l-5 btnDelete" data-title="loan" data-type="confirm" title="delete loan detail"><i class="zmdi zmdi-delete"></i> </a>&nbsp&nbsp';
             }   
         }

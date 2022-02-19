@@ -148,6 +148,12 @@ a {
     font-weight: 400;
 }
 
+.float-right
+{
+    float: right;
+    margin-left: 10px;
+}
+
 .page-item.active .page-link {
     z-index: 2;
     color: #fff;
